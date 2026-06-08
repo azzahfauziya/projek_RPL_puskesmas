@@ -1,28 +1,25 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
+import NavBar from '@/Components/NavBar.vue';
+import SideBar from '@/Components/SideBar.vue'
+import WelcomeCard from '@/Components/WelcomeCard.vue'
+import InformasiCard from '@/Components/InformasiCard.vue'
 </script>
 
 <template>
-    <Head title="Dashboard" />
-
     <AuthenticatedLayout>
-        <template #header>
-            <h2
-                class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200"
-            >
-                Dashboard
-            </h2>
-        </template>
+        <Head title="Dashboard" />
 
-        <div class="py-12">
-            <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                <div
-                    class="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800"
-                >
-                    <div class="p-6 text-gray-900 dark:text-gray-100">
-                        You're logged in!
-                    </div>
+        <div class="flex h-screen">
+            <SideBar :open="true" />
+
+            <div class="flex-1 p-6">
+                <NavBar />
+
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <WelcomeCard name="Dr. Siti Aminah" role="Dokter Umum" nip="1234567890" />
+                    <InformasiCard />
                 </div>
             </div>
         </div>
