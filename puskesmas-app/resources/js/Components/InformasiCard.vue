@@ -3,7 +3,7 @@ import StatsCard from '@/Components/StatsCard.vue'
 </script>
 
 <template>
-    <div class="bg-white p-6 shadow-sm">
+    <div class="rounded-2xl bg-white p-6 shadow-sm">
         <StatsCard title="Pengunjung Hari Ini" :value="15" />
 
         <h2 class="mb-4 mt-8 text-xl font-bold text-green-900">Informasi</h2>

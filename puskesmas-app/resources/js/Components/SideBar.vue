@@ -1,10 +1,10 @@
 <template>
     <aside :class="open ? 'w-64' : 'w-0'"
-        class="h-screen overflow-hidden border-r transition-all duration-300 ease-in-out">
+        class="h-screen overflow-hidden bg-white border-r transition-all duration-300 ease-in-out">
 
         <nav class="mt-4 px-3 pt-20">
             <a v-for="item in menus" :key="item.name" :href="item.href"
-                class="mb-1 flex items-center gap-3 rounded-lg px-4 py-3 text-green-900 hover:bg-green-100">
+                class="mb-1 flex items-center gap-3 rounded-lg px-4 py-3 text-green-900 hover:bg-green-500">
                 <component :is="item.icon" class="h-5 w-5" />
                 <span>{{ item.name }}</span>
             </a>
@@ -14,7 +14,6 @@
 
 <script setup>
 import { computed } from 'vue'
-import { usePage } from '@inertiajs/vue3'
 import {
     HomeIcon,
     UserGroupIcon,
@@ -27,8 +26,7 @@ defineProps({
     open: Boolean
 })
 
-const page = usePage()
-const role = computed(() => page.props.auth?.user?.role)
+const role = computed(() => 'administrasi')
 
 const menuPerRole = {
     administrasi: [
