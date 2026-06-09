@@ -5,28 +5,64 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PasienController;
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
-//->middleware(['auth', 'verified'])->name('dashboard')
-;
+// Redirect root ke login
+Route::get('/', fn() => redirect()->route('login'));
+
+// Halaman login
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
+
+// Route::get('/dashboard/administrasi', function () {
+//     return Inertia::render('Dashboard/Administrasi');
+// })
+// ->middleware(['auth', 'verified'])->name('dashboard.administrasi')
+// ;
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Dashboard administrasi — hanya bisa diakses role administrasi
+    Route::middleware(['auth', 'role:administrasi'])->group(function () {
+        Route::get('/dashboard/administrasi', [DashboardController::class, 'administrasi'])
+            ->name('dashboard.administrasi');
+
+    Route::get('/data-pasien', [PasienController::class, 'dataPasien'])  // ← ganti dari closure
+            ->name('data-pasien');
+    });
+
+    // Dashboard dokter — hanya bisa diakses role dokter
+    Route::middleware('role:dokter')
+        ->get('/dashboard/dokter', [DashboardController::class, 'dokter'])
+        ->name('dashboard.dokter');
+
+    // Dashboard apoteker — hanya bisa diakses role apoteker
+    Route::middleware('role:apoteker')
+        ->get('/dashboard/apoteker', [DashboardController::class, 'apoteker'])
+        ->name('dashboard.apoteker');
+
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+
 });
 
-require __DIR__.'/auth.php';
+//require __DIR__.'/auth.php';
+
 
 Route::get('/TabelObat', function () {
     return Inertia::render('TabelObat');

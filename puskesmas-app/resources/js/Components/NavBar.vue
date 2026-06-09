@@ -1,8 +1,8 @@
 <template>
     <Disclosure as="nav"
         class="relative bg-white after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10"
-        v-slot="{ open }">
-        <div class="mx-auto max-w-screen-2xl px-6">
+        v-slot="{ disclosureOpen }">
+        <div class="mx-automax-w-screen-2xl px-6">
             <div class="relative flex h-20 items-center justify-between">
                 <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
                     <!-- Mobile menu button-->
@@ -10,18 +10,17 @@
                         class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-500">
                         <span class="absolute -inset-0.5"></span>
                         <span class="sr-only">Open main menu</span>
-                        <Bars3Icon v-if="!open" class="block size-6" aria-hidden="true" />
+                        <Bars3Icon v-if="!disclosureOpen" class="block size-6" aria-hidden="true" />
                         <XMarkIcon v-else class="block size-6" aria-hidden="true" />
                     </DisclosureButton>
                 </div>
 
-                <div class="flex items-center mr-6">
-                    <button @click="$emit('toggle-sidebar')"
-                        class="rounded-lg p-2 transition-colors duration-300 hover:bg-green-100">
-                        <PanelLeft :class="sidebarOpen ? 'rotate-180' : ''"
-                            class="h-6 w-6 text-green-800 transition-transform duration-400" />
-                    </button>
-                </div>
+                <!-- Tombol sidebar -->
+                <button @click="$emit('toggle-sidebar')"
+                    class="rounded-lg p-2 mr-5 transition-colors duration-300 hover:bg-green-100">
+                    <PanelLeft :class="open ? 'rotate-180' : ''"
+                        class="h-6 w-6 text-green-800 transition-transform duration-300" />
+                </button>
 
                 <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                     <div class="flex shrink-0 items-center">
@@ -46,21 +45,11 @@
 
                     <!-- Profile dropdown -->
                     <Menu as="div" class="relative">
-                        <MenuButton
-                            class="flex w-56 items-center gap-3 rounded-xl border-2 border-green-800 px-4 py-2 hover:bg-green-200">
-                            <img class="h-10 w-10 rounded-full object-cover"
-                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e" alt="Profile" />
-
-                            <div class="text-left">
-                                <p class="font-bold text-green-800">
-                                    Dr. Friss
-                                </p>
-
-                                <p class="text-semibold text-green-800">
-                                    Dokter
-                                </p>
-                            </div>
-                        </MenuButton>
+                        <!-- Profile di navbar -->
+                        <div class="text-left">
+                            <p class="font-bold text-green-800">{{ profil?.nama ?? '-' }}</p>
+                            <p class="text-semibold text-green-800 capitalize">{{ role }}</p>
+                        </div>
 
                         <transition enter-active-class="transition ease-out duration-100"
                             enter-from-class="transform opacity-0 scale-95" enter-to-class="transform scale-100"
@@ -92,9 +81,18 @@
 </template>
 
 <script setup>
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { Disclosure, DisclosureButton, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { PanelLeft } from 'lucide-vue-next'
+import { usePage, router } from '@inertiajs/vue3'  
+import { computed } from 'vue'
 
+defineProps({
+    open: Boolean  // ← tambah prop ini
+})
 defineEmits(['toggle-sidebar'])
+
+const page = usePage()
+const profil = computed(() => page.props.auth?.profil)
+const role   = computed(() => page.props.auth?.user?.role)
 </script>

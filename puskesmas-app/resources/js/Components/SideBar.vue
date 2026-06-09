@@ -4,8 +4,8 @@
 
         <nav class="mt-4 px-3 pt-20">
             <a v-for="item in menus" :key="item.name" :href="item.href"
-                class="mb-1 flex items-center gap-3 rounded-lg px-4 py-3 text-green-900 hover:bg-green-500">
-                <component :is="item.icon" class="h-5 w-5" />
+                class="mb-1 flex items-center gap-3 rounded-lg px-4 py-3 text-emerald-800 hover:bg-emerald-50">
+                <component :is="item.icon" class="h-5 w-5 shrink-0" />
                 <span>{{ item.name }}</span>
             </a>
         </nav>
@@ -14,6 +14,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { usePage } from '@inertiajs/vue3'  // ← ambil role dari auth
 import {
     HomeIcon,
     UserGroupIcon,
@@ -26,12 +27,14 @@ defineProps({
     open: Boolean
 })
 
-const role = computed(() => 'administrasi')
+
+const page = usePage()
+const role = computed(() => page.props.auth?.user?.role ?? '')
 
 const menuPerRole = {
     administrasi: [
         { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/administrasi' },
-        { name: 'Data Pasien', icon: UserGroupIcon, href: '/pasien' },
+        { name: 'Data Pasien', icon: UserGroupIcon, href: '/data-pasien' },
         { name: 'Pendaftaran Pasien', icon: ClipboardDocumentListIcon, href: '/pendaftaran' },
     ],
     dokter: [
