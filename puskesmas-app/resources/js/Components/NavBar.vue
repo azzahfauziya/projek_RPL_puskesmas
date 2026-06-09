@@ -44,32 +44,44 @@
                     </button>
 
                     <!-- Profile dropdown -->
-                    <Menu as="div" class="relative">
-                        <!-- Profile di navbar -->
-                        <div class="text-left">
-                            <p class="font-bold text-green-800">{{ profil?.nama ?? '-' }}</p>
-                            <p class="text-semibold text-green-800 capitalize">{{ role }}</p>
-                        </div>
+                    <Menu as="div" class="relative mr-4">
+                        <MenuButton class="flex items-center gap-3 rounded-xl border-2 border-green-800 px-4 py-2 w-56 hover:bg-green-50 transition">
+                            <img class="h-10 w-10 rounded-full object-cover shrink-0"
+                                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"
+                                alt="Profile" />
+                            <div class="text-left min-w-0">
+                                <p class="font-bold text-green-800 text-sm truncate">{{ profil?.nama ?? '-' }}</p>
+                                <p class="text-xs text-green-700 capitalize">{{ role }}</p>
+                            </div>
+                        </MenuButton>
 
-                        <transition enter-active-class="transition ease-out duration-100"
-                            enter-from-class="transform opacity-0 scale-95" enter-to-class="transform scale-100"
-                            leave-active-class="transition ease-in duration-75" leave-from-class="transform scale-100"
+                        <transition
+                            enter-active-class="transition ease-out duration-100"
+                            enter-from-class="transform opacity-0 scale-95"
+                            enter-to-class="transform opacity-100 scale-100"
+                            leave-active-class="transition ease-in duration-75"
+                            leave-from-class="transform opacity-100 scale-100"
                             leave-to-class="transform opacity-0 scale-95">
                             <MenuItems
-                                class="absolute left-0 top-full z-10 mt-2 w-56 origin-top-left rounded-md bg-white py-1 outline -outline-offset-1 outline-green-800">
+                                class="absolute right-0 top-full z-10 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-green-800/20 py-1">
                                 <MenuItem v-slot="{ active }">
                                     <a href="#"
-                                        :class="[active ? 'bg-white/5 outline-hidden' : '', 'block px-4 py-2 text-sm text-green-800']">Your
-                                        profile</a>
+                                        :class="[active ? 'bg-green-50' : '', 'block px-4 py-2 text-sm text-green-800']">
+                                        Profil Saya
+                                    </a>
                                 </MenuItem>
                                 <MenuItem v-slot="{ active }">
                                     <a href="#"
-                                        :class="[active ? 'bg-white/5 outline-hidden' : '', 'block px-4 py-2 text-sm text-green-800']">Settings</a>
+                                        :class="[active ? 'bg-green-50' : '', 'block px-4 py-2 text-sm text-green-800']">
+                                        Pengaturan
+                                    </a>
                                 </MenuItem>
                                 <MenuItem v-slot="{ active }">
-                                    <a href="#"
-                                        :class="[active ? 'bg-white/5 outline-visible' : '', 'block px-4 py-2 text-sm text-green-800']">Sign
-                                        out</a>
+                                    <Link
+                                        href="/logout" method="post" as="button"
+                                        :class="[active ? 'bg-red-50' : '', 'w-full text-left block px-4 py-2 text-sm text-red-600']">
+                                        Keluar
+                                    </Link>
                                 </MenuItem>
                             </MenuItems>
                         </transition>
@@ -84,7 +96,7 @@
 import { Disclosure, DisclosureButton, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { PanelLeft } from 'lucide-vue-next'
-import { usePage, router } from '@inertiajs/vue3'  
+import { usePage, Link, router } from '@inertiajs/vue3'  
 import { computed } from 'vue'
 
 defineProps({
