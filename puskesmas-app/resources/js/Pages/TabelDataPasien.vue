@@ -4,7 +4,7 @@ import { Link } from '@inertiajs/vue3'
 import NavBar from '@/Components/NavBar.vue'
 import SideBar from '@/Components/SideBar.vue'
 
-defineProps({
+const props = defineProps({
     pasien: { type: Array, default: () => [] }
 })
 
