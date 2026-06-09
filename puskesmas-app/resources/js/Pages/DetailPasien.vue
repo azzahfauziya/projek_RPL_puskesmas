@@ -1,0 +1,100 @@
+<template>
+    <div class="min-h-screen bg-gray-100 p-8">
+        <div class="p-8 bg-white rounded-lg shadow-md border border-gray-300">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-4xl font-bold text-green-900">
+                    Input pendaftaran
+                </h1>
+    
+                <div class="flex items-center gap-3 border-2 border-green-900 rounded-2xl px-6 py-3 bg-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
+                        stroke="currentColor" class="size-8 text-emerald-800">
+    
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M6.75 3v2.25M17.25 3v2.25M3.75 8.25h16.5M4.5 6h15A1.5 1.5 0 0 1 21 7.5v12A1.5 1.5 0 0 1 19.5 21h-15A1.5 1.5 0 0 1 3 19.5v-12A1.5 1.5 0 0 1 4.5 6Z" />
+    
+                    </svg>
+    
+                    <span class="font-semibold text-lg">
+                        Selasa, 28 April 2026
+                    </span>
+                </div>
+            </div>
+    
+            <div class="gap-8 items-start">
+                <!-- Kolom Kiri -->
+                <div>
+                    <div class="flex mb-6">
+                        <span class="font-bold w-40">No Registrasi</span>
+                        <span class="mr-4">:</span>
+                        <span>REG-01234</span>
+                    </div>
+    
+                    <div class="flex mb-6">
+                        <span class="font-bold w-40 shrink-0">No RM</span>
+                        <span class="mr-4 shrink-0">:</span>
+                        <span>
+                            12345678
+                        </span>
+                    </div>
+    
+                    <div class="flex mb-6">
+                        <span class="font-bold w-40 shrink-0">Nama Pasien</span>
+                        <span class="mr-4 shrink-0">:</span>
+                        <span>
+                            Soso Momomo
+                        </span>
+                    </div>
+    
+                    <div class="flex mb-6">
+                        <span class="font-bold w-40 shrink-0">Jenis kelamin</span>
+                        <span class="mr-4 shrink-0">:</span>
+                        <span>
+                            Laki-laki
+                        </span>
+                    </div>
+                </div>
+    
+                <div>
+                    <div class="flex mb-6">
+                        <span class="font-bold w-40">Tanggal Lahir</span>
+                        <span class="mr-4">:</span>
+                        <span>23-02-2009</span>
+                    </div>
+    
+                    <div class="flex mb-6">
+                        <span class="font-bold w-40">Keluhan Awal</span>
+                        <span class="mr-4">:</span>
+                        <span>Pusing, Mual, Lapar</span>
+                    </div>
+    
+                    <div class="flex mb-6">
+                        <span class="font-bold w-40">Status Perawatan</span>
+                        <span class="mr-4">:</span>
+                        <div class="flex items-center justify-center text-white rounded-xl px-2 py-2 border border-gray-500"
+                            style="background-color:#E3483D;">
+                            Menunggu
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 justify-end">
+
+                    <button
+                        class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition">
+                        Input Tindakan
+                    </button>
+
+                    <button
+                        class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition">
+                        Input Resep Obat
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+  
+</template>

@@ -23,86 +23,17 @@
                 <table class="table-auto w-full">
                     <thead>
                         <tr class="bg-gray-200 dark:bg-gray-700">
-                            <th class="py-3 px-4  rounded-l-lg ">No RM</th>
+                            <th class="py-3 px-4  rounded-l-lg ">No Antrian</th>
+                            <th class="py-3 px-4 ">No RM</th>
                             <th class="py-3 px-4 ">Nama Pasien</th>
-                            <th class="py-3 px-4 ">Daftar</th>
                             <th class="py-3 px-4 rounded-r-lg">Detail</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="border-b dark:border-gray-700">
+                            <td class="py-3 px-4">20</td>
                             <td class="py-3 px-4">2012334</td>
                             <td class="py-3 px-4">Soso Momomo</td>
-                            <td class="py-3 items-center justify-center text-center">
-                                <button
-                                    class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md items-center gap-2">
-                                    Daftar
-                                </button>
-                            </td>
-                            <td class="py-3 items-center justify-center text-center">
-                                <button
-                                    class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md items-center gap-2">
-                                    Detail
-                                </button>
-                            </td>
-                        </tr>
-                        <tr class="border-b dark:border-gray-700">
-                            <td class="py-3 px-4">2012334</td>
-                            <td class="py-3 px-4">Soso Momomo</td>
-                            <td class="py-3 items-center justify-center text-center">
-                                <button
-                                    class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md items-center gap-2">
-                                    Daftar
-                                </button>
-                            </td>
-                            <td class="py-3 items-center justify-center text-center">
-                                <button
-                                    class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md items-center gap-2">
-                                    Detail
-                                </button>
-                            </td>
-                        </tr>
-                        <tr class="border-b dark:border-gray-700">
-                            <td class="py-3 px-4">2012334</td>
-                            <td class="py-3 px-4">Soso Momomo</td>
-                            <td class="py-3 items-center justify-center text-center">
-                                <button
-                                    class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md items-center gap-2">
-                                    Daftar
-                                </button>
-                            </td>
-                            <td class="py-3 items-center justify-center text-center">
-                                <button
-                                    class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md items-center gap-2">
-                                    Detail
-                                </button>
-                            </td>
-                        </tr>
-                        <tr class="border-b dark:border-gray-700">
-                            <td class="py-3 px-4">2012334</td>
-                            <td class="py-3 px-4">Soso Momomo</td>
-                            <td class="py-3 items-center justify-center text-center">
-                                <button
-                                    class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md items-center gap-2">
-                                    Daftar
-                                </button>
-                            </td>
-                            <td class="py-3 items-center justify-center text-center">
-                                <button
-                                    class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md items-center gap-2">
-                                    Detail
-                                </button>
-                            </td>
-                        </tr>
-                        <tr class="border-b dark:border-gray-700">
-                            <td class="py-3 px-4">2012334</td>
-                            <td class="py-3 px-4">Soso Momomo</td>
-                            <td class="py-3 items-center justify-center text-center">
-                                <button
-                                    class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md items-center gap-2">
-                                    Daftar
-                                </button>
-                            </td>
                             <td class="py-3 items-center justify-center text-center">
                                 <button
                                     class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md items-center gap-2">

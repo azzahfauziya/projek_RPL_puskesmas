@@ -67,3 +67,23 @@ Route::get('/DataPasien', function () {
 Route::get('/TabelAntrian', function () {
     return Inertia::render('TabelAntrian');
 });
+
+Route::get('/FormDiagnosa', function () {
+    return Inertia::render('FormDiagnosa');
+});
+
+Route::get('/FormTindakan', function () {
+    return Inertia::render('FormTindakan');
+});
+
+Route::get('/FormResep', function () {
+    return Inertia::render('FormResep');
+});
+
+Route::get('/FormDaftar', function () {
+    return Inertia::render('FormDaftar');
+});
+
+Route::get('/DetailPasien', function () {
+    return Inertia::render('DetailPasien');
+});
