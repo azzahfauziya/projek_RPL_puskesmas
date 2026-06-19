@@ -21,7 +21,9 @@ import {
     ClipboardDocumentListIcon,
     BeakerIcon,
     DocumentTextIcon,
+    QueueListIcon,
 } from '@heroicons/vue/24/outline'
+import { CreditCardIcon } from 'lucide-vue-next'
 
 defineProps({
     open: Boolean
@@ -36,14 +38,16 @@ const menuPerRole = {
         { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/administrasi' },
         { name: 'Data Pasien', icon: UserGroupIcon, href: '/data-pasien' },
         { name: 'Pendaftaran Pasien', icon: ClipboardDocumentListIcon, href: '/pendaftaran' },
+        { name: 'Daftar Antrian', icon: QueueListIcon, href: '/antrian' },
+        { name: 'Data Kunjungan', icon: UserGroupIcon, href: '/antrian' },
     ],
     dokter: [
-        { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/dokter' },
+        { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/administrasi' },
         { name: 'Daftar Antrian', icon: ClipboardDocumentListIcon, href: '/antrian' },
         { name: 'Data Pasien', icon: UserGroupIcon, href: '/pasien' },
     ],
     apoteker: [
-        { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/apoteker' },
+        { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/administrasi' },
         { name: 'Data Obat', icon: BeakerIcon, href: '/obat' },
         { name: 'Resep Masuk', icon: DocumentTextIcon, href: '/resep' },
     ],

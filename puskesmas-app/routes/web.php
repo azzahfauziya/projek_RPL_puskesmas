@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PasienController;
+use App\Http\Controllers\AntrianController;
 
 // Redirect root ke login
 Route::get('/', fn() => redirect()->route('login'));
@@ -41,8 +42,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/dashboard/administrasi', [DashboardController::class, 'administrasi'])
             ->name('dashboard.administrasi');
 
-    Route::get('/data-pasien', [PasienController::class, 'dataPasien'])  // ← ganti dari closure
+        Route::get('/data-pasien', [PasienController::class, 'dataPasien'])  // ← ganti dari closure
             ->name('data-pasien');
+        Route::get('/antrian', [AntrianController::class, 'daftarAntrian'])  // ← ganti dari closure
+            ->name('antrian');
     });
 
     // Dashboard dokter — hanya bisa diakses role dokter

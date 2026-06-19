@@ -38,7 +38,7 @@ class DashboardController extends Controller
             ->orderBy('no_registrasi')
             ->get();
 
-        return Inertia::render('Dashboard/Dokter', [
+        return Inertia::render('Dashboard/Administrasi', [
             'totalAntrian'   => $antrian->count(),
             'sudahDiperiksa' => $antrian->where('status_antrian', 'diperiksa')->count(),
             'antrian'        => $antrian,
@@ -54,7 +54,7 @@ class DashboardController extends Controller
             ->take(10)
             ->get();
 
-        return Inertia::render('Dashboard/Apoteker', [
+        return Inertia::render('Dashboard/Administrasi', [
             'totalObat'     => Obat::count(),
             'resepMenunggu' => Resep::where('status', 'menunggu')->count(),
             'obatMenipis'   => Obat::where('stok', '<', 10)->count(),
