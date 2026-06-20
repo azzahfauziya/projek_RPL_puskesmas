@@ -56,11 +56,9 @@ const paginated = computed(() => {
                             <thead>
                                 <tr class="bg-gray-200">
                                     <th class="py-3 px-4 text-left rounded-l-lg">No. RM</th>
+                                    <th class="py-3 px-4 text-left">No Registrasi</th>
                                     <th class="py-3 px-4 text-left">Nama</th>
-                                    <th class="py-3 px-4 text-left">Tanggal Lahir</th>
-                                    <th class="py-3 px-4 text-left">Jenis Kelamin</th>
-                                    <th class="py-3 px-4 text-left">No. HP</th>
-                                    <th class="py-3 px-4 text-left">Kelas BPJS</th>
+                                    <th class="py-3 px-4 text-left">Tanggal Kunjungan</th>
                                     <th class="py-3 px-4 text-center rounded-r-lg">Aksi</th>
                                 </tr>
                             </thead>
@@ -73,14 +71,12 @@ const paginated = computed(() => {
                                 <tr v-for="item in paginated" :key="item.no_rm"
                                     class="border-b hover:bg-slate-50">
                                     <td class="py-3 px-4">{{ item.no_rm }}</td>
+                                    <td class="py-3 px-4">{{ item.no_rm }}</td><!-- ini harusnya no regis dari tabel pendaftaran -->
                                     <td class="py-3 px-4 font-medium">{{ item.nama }}</td>
                                     <td class="py-3 px-4 text-slate-600">{{ item.tanggal_lahir }}</td>
-                                    <td class="py-3 px-4 text-slate-600 capitalize">{{ item.jenis_kelamin }}</td>
-                                    <td class="py-3 px-4 text-slate-600">{{ item.no_hp }}</td>
-                                    <td class="py-3 px-4 text-slate-600">{{ item.kelas_bpjs ?? '-' }}</td>
                                     <td class="py-3 px-4 text-center">
                                         <button class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md text-xs">
-                                            Detail
+                                            Tagihan
                                         </button>
                                     </td>
                                 </tr>
