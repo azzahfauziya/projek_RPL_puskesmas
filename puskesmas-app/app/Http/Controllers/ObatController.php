@@ -9,9 +9,18 @@ class ObatController extends Controller
 {
     public function tabelObat()
     {
-        $obat = Obat::all();
+        $obatDokter = Obat::all();
 
         return Inertia::render('TabelObat', [
+            'obatDokter' => $obatDokter
+        ]);
+    }
+
+    public function tabelObatApoteker()
+    {
+        $obat = Obat::all();
+
+        return Inertia::render('TabelObatApoteker', [
             'obat' => $obat
         ]);
     }

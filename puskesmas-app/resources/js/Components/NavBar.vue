@@ -59,16 +59,14 @@
                             <MenuItems
                                 class="absolute right-0 top-full z-10 mt-2 w-56 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-green-800/20 py-1">
                                 <MenuItem v-slot="{ active }">
-                                    <a href="#"
-                                        :class="[active ? 'bg-green-50' : '', 'block px-4 py-2 text-sm text-green-800']">
-                                        Profil Saya
-                                    </a>
+                                    <p class="block px-4 py-2 text-sm text-green-800">
+                                        {{ profil?.nama ?? '-' }}
+                                    </p>
                                 </MenuItem>
                                 <MenuItem v-slot="{ active }">
-                                    <a href="#"
-                                        :class="[active ? 'bg-green-50' : '', 'block px-4 py-2 text-sm text-green-800']">
-                                        Pengaturan
-                                    </a>
+                                    <p class="block px-4 py-2 text-sm text-green-800">
+                                        {{ profil?.nip ?? '-' }}
+                                    </p>
                                 </MenuItem>
                                 <MenuItem v-slot="{ active }">
                                     <Link

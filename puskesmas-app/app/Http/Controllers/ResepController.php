@@ -61,4 +61,27 @@ class ResepController extends Controller
             'resep' => $resep
         ]);
     }
+
+    public function tabelResepApoteker()
+{
+    $resepApoteker = DetailResep::with([
+        'resep.rekamMedis.pendaftaran.pasien'
+    ])->get();
+
+    return Inertia::render('TabelResepApoteker', [
+        'resepApoteker' => $resepApoteker
+    ]);
+}
+
+    public function updateStatus(Request $request, $id_resep)
+    {
+        Resep::where('id_resep', $id_resep)
+            ->update([
+                'status' => $request->status
+            ]);
+
+        return back();
+    }
+
+
 }

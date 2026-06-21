@@ -45,13 +45,13 @@ const menuPerRole = {
         { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/dokter' },
         { name: 'Daftar Antrian', icon: ClipboardDocumentListIcon, href: '/antrian' },
         { name: 'Data Pasien', icon: UserGroupIcon, href: '/pasien' },
-        { name: 'Data Obat', icon: ClipboardDocumentListIcon, href: '/obat' },
+        { name: 'Data Obat', icon: ClipboardDocumentListIcon, href: '/obat-dokter' },
         { name: 'Data Resep', icon: ClipboardDocumentListIcon, href: '/resep' },
     ],
     apoteker: [
-        { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/administrasi' },
+        { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/apoteker' },
         { name: 'Data Obat', icon: BeakerIcon, href: '/obat' },
-        { name: 'Resep Masuk', icon: DocumentTextIcon, href: '/resep' },
+        { name: 'Resep Masuk', icon: DocumentTextIcon, href: '/resep-masuk' },
     ],
 }
 

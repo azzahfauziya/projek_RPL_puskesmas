@@ -7,7 +7,7 @@
     const search = ref('')
     const sidebarOpen = ref(false)
     const props = defineProps({
-        obat: Array
+        obatDokter: Array
     })
 
     const halaman = ref(1)
@@ -25,9 +25,9 @@
     })
 
     const obatFilter = computed(() => {
-        if (!search.value) return props.obat
+        if (!search.value) return props.obatDokter
 
-        return props.obat.filter(item =>
+        return props.obatDokter.filter(item =>
             item.id_obat.toLowerCase().includes(search.value.toLowerCase()) ||
             item.nama_obat.toLowerCase().includes(search.value.toLowerCase())
         )
@@ -97,7 +97,10 @@
                             </thead>
                             <tbody>
                                 <tr v-for="item in obatTampil" :key="item.id_obat"
-                                    class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800">
+                                    class="border-b dark:border-gray-700"
+                                    :class="{
+                                        'bg-red-100 text-red-700 font-semibold': item.stok == 0
+                                    }">
                                     <td class="py-3 px-4">{{ item.id_obat }}</td>
                                     <td class="py-3 px-4">{{ item.nama_obat }}</td>
                                     <td class="py-3 px-4">{{ item.stok }}</td>
