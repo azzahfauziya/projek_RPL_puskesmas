@@ -1,47 +1,55 @@
 <?php
 namespace App\Helpers;
-use Illuminate\Support\Facades\DB;
+
+use App\Models\Pasien;
+use App\Models\Pendaftaran;
+use App\Models\RekamMedis;
+use App\Models\RekamMedisTindakan;
+use App\Models\Billing;
+use Carbon\Carbon;
 
 class IdGenerator
 {
-    /**
-     * Generate ID format: PREFIX-001, PREFIX-002, dst
-     * Contoh: DKT-001, ADM-001, OBT-001
-     */
-    public static function generate(string $prefix, string $table, string $column): string
+    public static function generateNoRm(): string
     {
-        $last = DB::table($table)->orderByDesc($column)->value($column);
-        $num = $last ? (int) substr($last, strlen($prefix) + 1) + 1 : 1;
-        return $prefix . '-' . str_pad($num, 3, '0', STR_PAD_LEFT);
+        $last = Pasien::orderByRaw('CAST(SUBSTRING(no_rm, 3) AS UNSIGNED) DESC')->first();
+        $lastNum = $last ? (int) substr($last->no_rm, 2) : 0;
+        $newNum = $lastNum + 1;
+        while (Pasien::where('no_rm', 'RM' . str_pad($newNum, 4, '0', STR_PAD_LEFT))->exists()) {
+            $newNum++;
+        }
+        return 'RM' . str_pad($newNum, 4, '0', STR_PAD_LEFT);
     }
 
-    /**
-     * Generate nomor registrasi format: REG-YYYYMMDD-001
-     * Reset tiap hari, jadi tiap hari mulai dari 001 lagi
-     */
-    public static function generateRegistrasi(): string
+    public static function generateNoRegistrasi(): string
     {
-        $date = now()->format('Ymd');
-        $prefix = "REG-{$date}";
-        $last = DB::table('pendaftaran')
-            ->where('no_registrasi', 'like', "{$prefix}%")
-            ->orderByDesc('no_registrasi')
-            ->value('no_registrasi');
-        $num = $last ? (int) substr($last, -3) + 1 : 1;
-        return $prefix . '-' . str_pad($num, 3, '0', STR_PAD_LEFT);
+        $today = Carbon::now()->format('Ymd');
+        $prefix = 'REG-' . $today . '-';
+        $last = Pendaftaran::where('no_registrasi', 'like', $prefix . '%')
+            ->orderBy('no_registrasi', 'desc')
+            ->first();
+        $lastNum = $last ? (int) substr($last->no_registrasi, -3) : 0;
+        return $prefix . str_pad($lastNum + 1, 3, '0', STR_PAD_LEFT);
     }
 
-    // public static function generateNoRm(): string
-    // {
-    //     $last = Pasien::orderByDesc('no_rm')->first();
+    public static function generateIdRekamMedis(): string
+    {
+        $last = RekamMedis::orderByRaw('CAST(SUBSTRING(id_rekam_medis, 3) AS UNSIGNED) DESC')->first();
+        $lastNum = $last ? (int) substr($last->id_rekam_medis, 2) : 0;
+        return 'RM' . str_pad($lastNum + 1, 4, '0', STR_PAD_LEFT);
+    }
 
-    //     if (!$last) {
-    //         return 'RM-000001';
-    //     }
+    public static function generateIdRekamMedisTindakan(): string
+    {
+        $last = RekamMedisTindakan::orderByRaw('CAST(id AS UNSIGNED) DESC')->first();
+        $lastNum = $last ? (int) $last->id : 0;
+        return (string) ($lastNum + 1);
+    }
 
-    //     $lastNumber = (int) substr($last->no_rm, 3);
-    //     $newNumber = $lastNumber + 1;
-
-    //     return 'RM-' . str_pad($newNumber, 6, '0', STR_PAD_LEFT);
-    // }
+    public static function generateIdBilling(): string
+    {
+        $last = Billing::orderByRaw('CAST(SUBSTRING(id_billing, 4) AS UNSIGNED) DESC')->first();
+        $lastNum = $last ? (int) substr($last->id_billing, 3) : 0;
+        return 'BIL' . str_pad($lastNum + 1, 4, '0', STR_PAD_LEFT);
+    }
 }
