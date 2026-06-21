@@ -241,9 +241,10 @@ const totalPages = computed(() => Math.ceil(filtered.value.length / perPage))
                                     <td class="py-3 px-4 font-medium">{{ item.pasien?.nama }}</td>
                                     <td class="py-3 px-4 text-slate-600">{{ item.tanggal_kunjungan }}</td>
                                     <td class="py-3 px-4 text-center">
-                                        <button class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md text-xs">
+                                        <Link :href="route('detail-pasien', item.no_registrasi)"
+                                            class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md text-xs inline-block">
                                             Detail
-                                        </button>
+                                        </Link>
                                     </td>
                                 </tr>
                             </tbody>

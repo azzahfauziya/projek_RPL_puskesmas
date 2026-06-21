@@ -10,7 +10,7 @@ class AntrianController extends Controller
 public function daftarAntrian()
 {
     $antrian = Pendaftaran::with('pasien')
-        ->whereDate('tanggal_kunjungan', today())
+        //->whereDate('tanggal_kunjungan', today())
         ->orderBy('tanggal_kunjungan', 'asc')
         ->get();
 

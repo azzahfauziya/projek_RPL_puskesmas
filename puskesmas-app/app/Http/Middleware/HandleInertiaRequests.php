@@ -35,11 +35,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'auth' => [
                 'user' => $user,
-<<<<<<< Updated upstream
-                'profil' => $user?->getProfil(),
-=======
                 'profil' => $user ? $user->getProfil() : null,
->>>>>>> Stashed changes
             ],
         ];
     }

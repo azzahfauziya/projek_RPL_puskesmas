@@ -1,3 +1,19 @@
+<script setup>
+import { Link } from '@inertiajs/vue3'
+
+    const props = defineProps({
+        pendaftaran: Object
+    })
+
+    const formatTanggal = (tanggal) => {
+        return new Date(tanggal).toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        })
+    }
+</script>
+
 <template>
     <div class="min-h-screen bg-gray-100 p-8">
         <div class="p-8 bg-white rounded-lg shadow-md border border-gray-300">
@@ -17,7 +33,7 @@
                     </svg>
     
                     <span class="font-semibold text-lg">
-                        Selasa, 28 April 2026
+                        {{ formatTanggal(pendaftaran.tanggal_kunjungan) }}
                     </span>
                 </div>
             </div>
@@ -28,31 +44,25 @@
                     <div class="flex mb-6">
                         <span class="font-bold w-40">No Registrasi</span>
                         <span class="mr-4">:</span>
-                        <span>REG-01234</span>
+                        <span>{{pendaftaran.no_registrasi}}</span>
                     </div>
     
                     <div class="flex mb-6">
                         <span class="font-bold w-40 shrink-0">No RM</span>
                         <span class="mr-4 shrink-0">:</span>
-                        <span>
-                            12345678
-                        </span>
+                        <span>{{pendaftaran.no_rm}}</span>
                     </div>
     
                     <div class="flex mb-6">
                         <span class="font-bold w-40 shrink-0">Nama Pasien</span>
                         <span class="mr-4 shrink-0">:</span>
-                        <span>
-                            Soso Momomo
-                        </span>
+                        <span>{{ pendaftaran.pasien.nama }}</span>
                     </div>
     
                     <div class="flex mb-6">
                         <span class="font-bold w-40 shrink-0">Jenis kelamin</span>
                         <span class="mr-4 shrink-0">:</span>
-                        <span>
-                            Laki-laki
-                        </span>
+                        <span>{{ pendaftaran.pasien.jenis_kelamin }}</span>
                     </div>
                 </div>
     
@@ -60,13 +70,13 @@
                     <div class="flex mb-6">
                         <span class="font-bold w-40">Tanggal Lahir</span>
                         <span class="mr-4">:</span>
-                        <span>23-02-2009</span>
+                        <span>{{ pendaftaran.pasien.tanggal_lahir }}</span>
                     </div>
     
                     <div class="flex mb-6">
                         <span class="font-bold w-40">Keluhan Awal</span>
                         <span class="mr-4">:</span>
-                        <span>Pusing, Mual, Lapar</span>
+                        <span>{{ pendaftaran.keluhan_awal }}</span>
                     </div>
     
                     <div class="flex mb-6">
@@ -81,15 +91,15 @@
 
                 <div class="flex gap-3 justify-end">
 
-                    <button
-                        class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition">
+                    <Link :href="route('form-tindakan', pendaftaran.no_registrasi)"
+                        class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition flex items-center justify-center">
                         Input Tindakan
-                    </button>
+                    </Link>
 
-                    <button
-                        class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition">
+                    <Link :href="route('form-resep', pendaftaran.no_registrasi)"
+                        class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition flex items-center justify-center">
                         Input Resep Obat
-                    </button>
+                    </Link>
 
                 </div>
 

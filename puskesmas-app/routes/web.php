@@ -9,6 +9,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PasienController;
 use App\Http\Controllers\AntrianController;
+use App\Http\Controllers\ObatController;
+use App\Http\Controllers\TindakanController;
+use App\Http\Controllers\ResepController;
 
 // Redirect root ke login
 Route::get('/', fn() => redirect()->route('login'));
@@ -46,17 +49,39 @@ Route::middleware('auth')->group(function () {
             ->name('data-pasien');
         Route::get('/antrian', [AntrianController::class, 'daftarAntrian'])  // ← ganti dari closure
             ->name('antrian');
+        Route::get('/detail-pasien/{no_registrasi}', [PasienController::class, 'detailPasien'])
+            ->name('detail-pasien');
     });
 
-    // Dashboard dokter — hanya bisa diakses role dokter
-    Route::middleware('role:dokter')
-        ->get('/dashboard/dokter', [DashboardController::class, 'dokter'])
-        ->name('dashboard.dokter');
+    Route::middleware(['auth', 'role:dokter'])->group(function () {
+        Route::get('/dashboard/dokter', [DashboardController::class, 'dokter'])
+            ->name('dashboard.dokter');
 
-    // Dashboard apoteker — hanya bisa diakses role apoteker
-    Route::middleware('role:apoteker')
-        ->get('/dashboard/apoteker', [DashboardController::class, 'apoteker'])
-        ->name('dashboard.apoteker');
+        Route::get('/data-pasien', [PasienController::class, 'dataPasien'])  // ← ganti dari closure
+            ->name('data-pasien');
+        Route::get('/antrian', [AntrianController::class, 'daftarAntrian'])  // ← ganti dari closure
+            ->name('antrian');
+        Route::get('/obat', [ObatController::class, 'tabelObat'])
+            ->name('obat');
+        Route::get('/detail-pasien/{no_registrasi}', [PasienController::class, 'detailPasien'])
+            ->name('detail-pasien');
+        Route::get('/form-tindakan/{no_registrasi}', [TindakanController::class, 'formTindakan'])
+            ->name('form-tindakan');
+        Route::get('/form-resep/{no_registrasi}', [ResepController::class, 'formResep'])
+            ->name('form-resep');
+        Route::post('/tindakan', [TindakanController::class, 'simpanTindakan'])
+            ->name('tindakan.simpan');
+        Route::post('/resep', [ResepController::class, 'simpan'])
+            ->name('resep.simpan');
+        Route::get('/resep', [ResepController::class, 'tabelResep'])
+            ->name('resep');
+    });
+    
+    Route::middleware(['auth', 'role:apoteker'])->group(function () {
+        Route::get('/dashboard/apoteker', [DashboardController::class, 'apoteker'])
+            ->name('dashboard.apoteker');
+
+    });
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

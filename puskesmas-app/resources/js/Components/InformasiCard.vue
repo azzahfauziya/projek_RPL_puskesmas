@@ -13,11 +13,6 @@ import StatsCard from '@/Components/StatsCard.vue'
                 <span>Daftar Staff</span>
                 <button class="rounded-lg bg-green-800 px-4 py-2 text-white">Lihat</button>
             </div>
-
-            <div class="flex items-center justify-between border-b pb-3">
-                <span>Jadwal Dokter</span>
-                <button class="rounded-lg bg-green-800 px-4 py-2 text-white">Lihat</button>
-            </div>
         </div>
     </div>
 </template>

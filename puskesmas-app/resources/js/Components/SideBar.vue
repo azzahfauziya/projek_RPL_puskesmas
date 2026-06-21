@@ -42,9 +42,11 @@ const menuPerRole = {
         { name: 'Data Kunjungan', icon: UserGroupIcon, href: '/antrian' },
     ],
     dokter: [
-        { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/administrasi' },
+        { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/dokter' },
         { name: 'Daftar Antrian', icon: ClipboardDocumentListIcon, href: '/antrian' },
         { name: 'Data Pasien', icon: UserGroupIcon, href: '/pasien' },
+        { name: 'Data Obat', icon: ClipboardDocumentListIcon, href: '/obat' },
+        { name: 'Data Resep', icon: ClipboardDocumentListIcon, href: '/resep' },
     ],
     apoteker: [
         { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/administrasi' },
