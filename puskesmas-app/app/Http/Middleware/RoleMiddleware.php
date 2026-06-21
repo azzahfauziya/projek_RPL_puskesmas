@@ -13,7 +13,7 @@ class RoleMiddleware
     public function handle(Request $request, Closure $next, string ...$roles): mixed
     {
         $user = $request->user();
-// dd($user, $roles, $request->session()->getId()); //debug
+//dd($user, $roles, $request->session()->getId()); //debug
         if (!$user) {
             return redirect()->route('login');
         }

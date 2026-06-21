@@ -37,6 +37,9 @@ class HandleInertiaRequests extends Middleware
                 'user' => $user,
                 'profil' => $user ? $user->getProfil() : null,
             ],
+            'flash' => [
+            'success' => session('success'),
+        ],
         ];
     }
 }

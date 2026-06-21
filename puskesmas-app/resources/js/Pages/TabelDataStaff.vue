@@ -1,11 +1,10 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { Link } from '@inertiajs/vue3'
 import NavBar from '@/Components/NavBar.vue'
 import SideBar from '@/Components/SideBar.vue'
 
 const props = defineProps({
-    pasien: { type: Array, default: () => [] }
+    staff: { type: Array, default: () => [] }
 })
 
 const sidebarOpen = ref(false)
@@ -14,11 +13,12 @@ const currentPage = ref(1)
 const perPage = 10
 
 const filtered = computed(() => {
-    if (!search.value) return props.pasien
+    const source = Array.isArray(props.staff) ? props.staff : []
+    if (!search.value) return source
     const q = search.value.toLowerCase()
-    return props.pasien.filter(p =>
-        p.no_rm.toLowerCase().includes(q) ||
-        p.nama.toLowerCase().includes(q)
+    return source.filter(s =>
+        s.nama.toLowerCase().includes(q) ||
+        s.jabatan.toLowerCase().includes(q)
     )
 })
 
@@ -56,10 +56,10 @@ const paginated = computed(() => {
                             <thead>
                                 <tr class="bg-gray-200">
                                     <th class="py-3 px-4 text-left">Nama</th>
-                                    <th class="py-3 px-4 text-left">Jenis Kelamin</th>
+                                    <!-- <th class="py-3 px-4 text-left">Jenis Kelamin</th> -->
                                     <th class="py-3 px-4 text-left">Jabatan</th>
                                     <th class="py-3 px-4 text-left">No. HP</th>
-                                    <th class="py-3 px-4 text-center rounded-r-lg">Aksi</th>
+                                    <!-- <th class="py-3 px-4 text-center rounded-r-lg">Aksi</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,17 +68,10 @@ const paginated = computed(() => {
                                         Belum ada data pasien
                                     </td>
                                 </tr>
-                                <tr v-for="item in paginated" :key="item.no_rm"
-                                    class="border-b hover:bg-slate-50">
+                                <tr v-for="item in paginated" :key="item.id" class="border-b hover:bg-slate-50">
                                     <td class="py-3 px-4 font-medium">{{ item.nama }}</td>
-                                    <td class="py-3 px-4 text-slate-600 capitalize">{{ item.jenis_kelamin }}</td>
-                                    <td class="py-3 px-4 text-slate-600">{{ item.kelas_bpjs ?? '-' }}</td> <!-- ganti role -->
-                                    <td class="py-3 px-4 text-slate-600">{{ item.no_hp }}</td>
-                                    <td class="py-3 px-4 text-center">
-                                        <button class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md text-xs">
-                                            Detail
-                                        </button>
-                                    </td>
+                                    <td class="py-3 px-4 text-slate-600">{{ item.jabatan }}</td>
+                                    <td class="py-3 px-4 text-slate-600">{{ item.no_hp ?? '-' }}</td>
                                 </tr>
                             </tbody>
                         </table>

@@ -1,174 +1,181 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
+import NavBar from '@/Components/NavBar.vue'
+import SideBar from '@/Components/SideBar.vue'
 
-    const props = defineProps({
-        resep: Array
-    })
+const props = defineProps({
+    resep: Array
+})
 
-    const search = ref('')
-    const halaman = ref(1)
-    const perPage = 10
+const sidebarOpen = ref(false)
+const search = ref('')
+const halaman = ref(1)
+const perPage = 10
 
-    const resepFilter = computed(() => {
-        if (!search.value) return props.resep
+const resepFilter = computed(() => {
+    if (!search.value) return props.resep
 
-        const keyword = search.value.toLowerCase()
+    const keyword = search.value.toLowerCase()
 
-        return props.resep.filter(item =>
-            item.resep?.rekam_medis?.no_registrasi
-                ?.toLowerCase()
-                .includes(keyword)
+    return props.resep.filter(item =>
+        item.resep?.rekam_medis?.no_registrasi
+            ?.toLowerCase()
+            .includes(keyword)
 
-            ||
+        ||
 
-            item.resep?.rekam_medis?.pendaftaran?.pasien?.nama
-                ?.toLowerCase()
-                .includes(keyword)
-        )
-    })
+        item.resep?.rekam_medis?.pendaftaran?.pasien?.nama
+            ?.toLowerCase()
+            .includes(keyword)
+    )
+})
 
-    const totalHalaman = computed(() => {
-        return Math.ceil(resepFilter.value.length / perPage)
-    })
+const totalHalaman = computed(() => {
+    return Math.ceil(resepFilter.value.length / perPage)
+})
 
-    const resepTampil = computed(() => {
-        const start = (halaman.value - 1) * perPage
-        const end = start + perPage
+const resepTampil = computed(() => {
+    const start = (halaman.value - 1) * perPage
+    const end = start + perPage
 
-        return resepFilter.value.slice(start, end)
-    })
+    return resepFilter.value.slice(start, end)
+})
 
-    watch(search, () => {
-        halaman.value = 1
-    })
+watch(search, () => {
+    halaman.value = 1
+})
 
-    const nextPage = () => {
-        if (halaman.value < totalHalaman.value) {
-            halaman.value++
-        }
+const nextPage = () => {
+    if (halaman.value < totalHalaman.value) {
+        halaman.value++
     }
+}
 
-    const prevPage = () => {
-        if (halaman.value > 1) {
-            halaman.value--
-        }
+const prevPage = () => {
+    if (halaman.value > 1) {
+        halaman.value--
     }
+}
 
-    const firstPage = () => {
-        halaman.value = 1
-    }
+const firstPage = () => {
+    halaman.value = 1
+}
 
-    const lastPage = () => {
-        halaman.value = totalHalaman.value
-    }
+const lastPage = () => {
+    halaman.value = totalHalaman.value
+}
 
 </script>
 
 <template>
-    <div class="p-8 bg-gray-100 min-h-screen dark:bg-gray-900 text-gray-800 dark:text-gray-100">
-        <!-- Header dengan grid 2 kolom: Judul di kiri, Search di kanan -->
-        <div class="grid grid-cols-4 gap-4 mb-6">
-            <!-- Kolom Kiri: Judul -->
-            <div class="col-span-3">
-                <h1 class="text-2xl font-extrabold text-[#144B29] dark:text-blue-400">
-                    Tabel Resep
-                </h1>
-            </div>
+    <div class="flex h-screen overflow-hidden bg-slate-100">
+        <SideBar :open="sidebarOpen" />
+        <div class="flex flex-1 flex-col overflow-hidden">
+            <NavBar :open="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
+            <main class="flex-1 overflow-y-auto p-8">
 
-            <!-- Kolom Kanan: Search -->
-            <div>
-                <input v-model="search" type="text"
-                    class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    placeholder="Cari berdasarkan no Registrasi / Nama Pasien" />
-            </div>
-        </div>
+                <!-- Header -->
+                <div class="grid grid-cols-4 gap-4 mb-6">
+                    <div class="col-span-3">
+                        <h1 class="text-2xl font-extrabold text-[#144B29]">Tabel Resep</h1>
+                    </div>
+                    <div>
+                        <input v-model="search" type="text"
+                            class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                            placeholder="Cari berdasarkan no.reg atau nama" />
+                    </div>
+                </div>
 
-        <!-- Tabel -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-            <div class="p-4 text-center"> <!-- Ganti p-40 ke p-4 biar ga kegedean -->
-                <table class="table-auto w-full">
-                    <thead>
-                        <tr class="bg-gray-200 dark:bg-gray-700">
-                            <th class="py-3 px-4 rounded-l-lg">No Registrasi</th>
-                            <th class="py-3 px-4 ">Nama Pasien</th>
-                            <th class="py-3 px-4 ">Nama Obat</th>
-                            <th class="py-3 px-4 ">Dosis</th>
-                            <th class="py-3 px-4 rounded-r-lg">Aturan Pakai</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="item in resepTampil" :key="item.id_detail"
-                            class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800">
-                            <td class="py-3 px-4">
-                                {{ item.resep?.rekam_medis?.no_registrasi }}
-                            </td>
+                <!-- Tabel -->
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="p-4">
+                        <table class="table-auto w-full text-sm">
+                            <thead>
+                                <tr class="bg-gray-200">
+                                    <th class="py-3 px-4 text-left">No Registrasi</th>
+                                    <th class="py-3 px-4 text-left">Nama Pasien</th>
+                                    <th class="py-3 px-4 text-left">Nama Obat</th>
+                                    <th class="py-3 px-4 text-left">Dosis</th>
+                                    <th class="py-3 px-4 text-left">Aturan Pakai</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="item in resepTampil" :key="item.id_detail"
+                                    class="border-b border-gray-700 hover:bg-gray-100">
+                                    <td class="py-3 px-4">
+                                        {{ item.resep?.rekam_medis?.no_registrasi }}
+                                    </td>
 
-                            <td class="py-3 px-4">
-                                {{ item.resep?.rekam_medis?.pendaftaran?.pasien?.nama }}
-                            </td>
+                                    <td class="py-3 px-4">
+                                        {{ item.resep?.rekam_medis?.pendaftaran?.pasien?.nama }}
+                                    </td>
 
-                            <td class="py-3 px-4">
-                                {{ item.nama_obat_saat_resep }}
-                            </td>
+                                    <td class="py-3 px-4">
+                                        {{ item.nama_obat_saat_resep }}
+                                    </td>
 
-                            <td class="py-3 px-4">
-                                {{ item.dosis }} {{ item.satuan_dosis }}
-                            </td>
+                                    <td class="py-3 px-4">
+                                        {{ item.dosis }} {{ item.satuan_dosis }}
+                                    </td>
 
-                            <td class="py-3 px-4">
-                                {{ item.aturan_pakai }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div>
-            <div class="flex justify-end mt-4 gap-2">
-                <div>
-                    <button @click="firstPage"
-                        class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
-                        </svg>
-                    </button>
+                                    <td class="py-3 px-4">
+                                        {{ item.aturan_pakai }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div>
-                    <button @click="prevPage" :disabled="halaman === 1"
-                        class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800 disabled:opacity-50">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                        </svg>
-                    </button>
+                    <div class="flex justify-end mt-4 gap-2">
+                        <div>
+                            <button @click="firstPage"
+                                class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div>
+                            <button @click="prevPage" :disabled="halaman === 1"
+                                class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800 disabled:opacity-50">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M15.75 19.5 8.25 12l7.5-7.5" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div>
+                            <button class="border border-emerald-800 bg-emerald-800 text-white w-10 h-10 rounded-lg">
+                                {{ halaman }}
+                            </button>
+                        </div>
+                        <div>
+                            <button @click="nextPage" :disabled="halaman === totalHalaman"
+                                class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800 disabled:opacity-50">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div>
+                            <button @click="lastPage"
+                                class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800"><svg
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <button class="border border-emerald-800 bg-emerald-800 text-white w-10 h-10 rounded-lg">
-                        {{ halaman }}
-                    </button>
-                </div>
-                <div>
-                    <button @click="nextPage" :disabled="halaman === totalHalaman"
-                        class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800 disabled:opacity-50">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                        </svg>
-                    </button>
-                </div>
-                <div>
-                    <button @click="lastPage"
-                        class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800"><svg
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
+            </main>
         </div>
     </div>
 </template>

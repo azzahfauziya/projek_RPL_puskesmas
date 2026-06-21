@@ -36,10 +36,10 @@ const role = computed(() => page.props.auth?.user?.role ?? '')
 const menuPerRole = {
     administrasi: [
         { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/administrasi' },
-        { name: 'Data Pasien', icon: UserGroupIcon, href: '/data-pasien' },
         { name: 'Pendaftaran Pasien', icon: ClipboardDocumentListIcon, href: '/pendaftaran' },
         { name: 'Daftar Antrian', icon: QueueListIcon, href: '/antrian' },
-        { name: 'Data Kunjungan', icon: UserGroupIcon, href: '/antrian' },
+        { name: 'Data Kunjungan', icon: UserGroupIcon, href: '/kunjungan' },
+        { name: 'Data Pasien', icon: UserGroupIcon, href: '/data-pasien' },
     ],
     dokter: [
         { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/dokter' },

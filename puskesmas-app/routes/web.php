@@ -12,6 +12,11 @@ use App\Http\Controllers\AntrianController;
 use App\Http\Controllers\ObatController;
 use App\Http\Controllers\TindakanController;
 use App\Http\Controllers\ResepController;
+use App\Http\Controllers\PendaftaranController;
+use App\Http\Controllers\StaffController;
+use App\Http\Controllers\TagihanController;
+use App\Http\Controllers\KwitansiController;
+use App\Http\Controllers\BillingController;
 
 // Redirect root ke login
 Route::get('/', fn() => redirect()->route('login'));
@@ -40,31 +45,54 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Dashboard administrasi — hanya bisa diakses role administrasi
-    Route::middleware(['auth', 'role:administrasi'])->group(function () {
+    Route::get('/staff', [StaffController::class, 'index'])->name('staff');
+    
+    // Route yang bisa diakses administrasi DAN dokter
+    Route::middleware(['auth', 'role:administrasi,dokter'])->group(function () {
+        Route::get('/antrian', [AntrianController::class, 'daftarAntrian'])->name('antrian');
+        Route::get('/data-pasien', [PasienController::class, 'dataPasien'])->name('data-pasien');
+        Route::get('/detail-pasien/{no_registrasi}', [PasienController::class, 'detailPasien'])->name('detail-pasien');
+        });
+        
+        
+        // Dashboard administrasi — hanya bisa diakses role administrasi
+        Route::middleware(['auth', 'role:administrasi'])->group(function () {
         Route::get('/dashboard/administrasi', [DashboardController::class, 'administrasi'])
             ->name('dashboard.administrasi');
-
-        Route::get('/data-pasien', [PasienController::class, 'dataPasien'])  // ← ganti dari closure
-            ->name('data-pasien');
-        Route::get('/antrian', [AntrianController::class, 'daftarAntrian'])  // ← ganti dari closure
-            ->name('antrian');
-        Route::get('/detail-pasien/{no_registrasi}', [PasienController::class, 'detailPasien'])
-            ->name('detail-pasien');
+            
+            // Route::get('/data-pasien', [PasienController::class, 'dataPasien'])  // ← ganti dari closure
+            //     ->name('data-pasien');
+            // Route::get('/antrian', [AntrianController::class, 'daftarAntrian'])  // ← ganti dari closure
+            //     ->name('antrian');
+            // Route::get('/detail-pasien/{no_registrasi}', [PasienController::class, 'detailPasien'])
+            //     ->name('detail-pasien');
+            Route::get('/kunjungan', [AntrianController::class, 'daftarKunjungan'])  // ← ganti dari closure
+            ->name('kunjungan');
+            Route::get('/pendaftaran', [PendaftaranController::class, 'form'])
+            ->name('pendaftaran.form');
+            Route::get('/pendaftaran/cari', [PendaftaranController::class, 'cariPasien'])
+            ->name('pendaftaran.cari');
+            Route::post('/pendaftaran', [PendaftaranController::class, 'store'])
+            ->name('pendaftaran.store');
+            Route::get('/pasien/{no_rm}/detail', [PasienController::class, 'detail'])  // ← tambah ini
+                ->name('pasien.detail');
+            Route::get('/tagihan/{no_registrasi}', [TagihanController::class, 'show'])->name('tagihan');
+            Route::get('/kwitansi/{no_registrasi}', [KwitansiController::class, 'show'])->name('kwitansi');
+            Route::post('/billing', [BillingController::class, 'store'])->name('billing.store');
     });
 
     Route::middleware(['auth', 'role:dokter'])->group(function () {
         Route::get('/dashboard/dokter', [DashboardController::class, 'dokter'])
             ->name('dashboard.dokter');
 
-        Route::get('/data-pasien', [PasienController::class, 'dataPasien'])  // ← ganti dari closure
-            ->name('data-pasien');
-        Route::get('/antrian', [AntrianController::class, 'daftarAntrian'])  // ← ganti dari closure
-            ->name('antrian');
+        // Route::get('/data-pasien', [PasienController::class, 'dataPasien'])  // ← ganti dari closure
+        //     ->name('data-pasien');
+        // Route::get('/antrian', [AntrianController::class, 'daftarAntrian'])  // ← ganti dari closure
+        //     ->name('antrian');
         Route::get('/obat', [ObatController::class, 'tabelObat'])
             ->name('obat');
-        Route::get('/detail-pasien/{no_registrasi}', [PasienController::class, 'detailPasien'])
-            ->name('detail-pasien');
+        // Route::get('/detail-pasien/{no_registrasi}', [PasienController::class, 'detailPasien'])
+        //     ->name('detail-pasien');
         Route::get('/form-tindakan/{no_registrasi}', [TindakanController::class, 'formTindakan'])
             ->name('form-tindakan');
         Route::get('/form-resep/{no_registrasi}', [ResepController::class, 'formResep'])
@@ -84,8 +112,6 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-
 
 });
 

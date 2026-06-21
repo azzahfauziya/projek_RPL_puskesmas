@@ -36,12 +36,6 @@
                     </div>
                 </div>
                 <div class="flex items-center gap-3 pr-4">
-                    <button type="button"
-                        class="relative rounded-full p-1 text-green-800 hover:text-black focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
-                        <span class="absolute -inset-1.5"></span>
-                        <span class="sr-only">View notifications</span>
-                        <BellIcon class="size-6" aria-hidden="true" />
-                    </button>
 
                     <!-- Profile dropdown -->
                     <Menu as="div" class="relative mr-4">
