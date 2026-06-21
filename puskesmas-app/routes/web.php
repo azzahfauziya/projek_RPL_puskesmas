@@ -16,7 +16,11 @@ use App\Http\Controllers\TagihanController;
 use App\Http\Controllers\KwitansiController;
 use App\Http\Controllers\BillingController;
 use App\Http\Controllers\EditObatController;
+<<<<<<< Updated upstream
 use App\Http\Controllers\HistoriPasienController;
+=======
+use App\Http\Controllers\DiagnosaController;
+>>>>>>> Stashed changes
 
 Route::get('/', fn() => redirect()->route('login'));
 
@@ -31,11 +35,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/staff', [StaffController::class, 'index'])->name('staff');
 
     // Administrasi + Dokter
+<<<<<<< Updated upstream
     Route::middleware(['role:administrasi, dokter, perawat'])->group(function () {
         Route::get('/antrian', [AntrianController::class, 'daftarAntrian'])->name('antrian');
         Route::get('/data-pasien', [PasienController::class, 'dataPasien'])->name('data-pasien');
         Route::get('/detail-pasien/{no_registrasi}', [PasienController::class, 'detailPasien'])->name('detail-pasien');
         Route::get('/histori-pasien/{no_rm}', [HistoriPasienController::class, 'show'])->name('histori-pasien');
+=======
+    Route::middleware(['role:administrasi,dokter'])->group(function () {
+        Route::get('/antrian', [AntrianController::class, 'daftarAntrian'])->name('antrian');
+        Route::get('/data-pasien', [PasienController::class, 'dataPasien'])->name('data-pasien');
+        Route::get('/detail-pasien/{no_registrasi}', [PasienController::class, 'detailPasien'])->name('detail-pasien');
+>>>>>>> Stashed changes
     });
 
     // Administrasi
@@ -58,6 +69,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/obat-dokter', [ObatController::class, 'tabelObat'])->name('obat.dokter');
         Route::get('/form-tindakan/{no_registrasi}', [TindakanController::class, 'formTindakan'])->name('form-tindakan');
         Route::get('/form-resep/{no_registrasi}', [ResepController::class, 'formResep'])->name('form-resep');
+<<<<<<< Updated upstream
+=======
+        Route::get('/form-diagnosa/{no_registrasi}', [DiagnosaController::class, 'create'])->name('form-diagnosa');
+        Route::post('/diagnosa', [DiagnosaController::class, 'store'])->name('diagnosa.store');
+>>>>>>> Stashed changes
         Route::post('/tindakan', [TindakanController::class, 'simpanTindakan'])->name('tindakan.simpan');
         Route::post('/resep', [ResepController::class, 'simpan'])->name('resep.simpan');
         Route::get('/resep', [ResepController::class, 'tabelResep'])->name('resep');

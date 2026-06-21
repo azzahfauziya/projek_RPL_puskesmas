@@ -4,20 +4,32 @@ import { Link, usePage } from '@inertiajs/vue3'
 import NavBar from '@/Components/NavBar.vue'
 import SideBar from '@/Components/SideBar.vue'
 
-const props = defineProps({
-    pendaftaran: Object
-})
-const sidebarOpen = ref(false)
-const page = usePage()
-const role = computed(() => page.props.auth?.user?.role)
-
-const formatTanggal = (tanggal) => {
-    return new Date(tanggal).toLocaleDateString('id-ID', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
+    const props = defineProps({
+        pendaftaran: Object
     })
-}
+    const sidebarOpen = ref(false)
+    const page = usePage()
+    const role = computed(() => page.props.auth?.user?.role)
+
+    const formatTanggal = (tanggal) => {
+        return new Date(tanggal).toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+        })
+    }
+
+    const statusPerawatan = computed(() => {
+        return props.pendaftaran.rekam_medis
+            ? 'Selesai'
+            : 'Menunggu'
+    })
+
+    const warnaStatus = computed(() => {
+        return props.pendaftaran.rekam_medis
+            ? 'bg-green-600'
+            : 'bg-red-500'
+    })
 </script>
 
 <template>
@@ -92,9 +104,9 @@ const formatTanggal = (tanggal) => {
                             <div class="flex mb-6">
                                 <span class="font-bold w-40">Status Perawatan</span>
                                 <span class="mr-4">:</span>
-                                <div class="flex items-center justify-center text-white rounded-xl px-2 py-2 border border-gray-500"
-                                    style="background-color:#E3483D;">
-                                    Menunggu
+                                <div class="flex items-center justify-center text-white rounded-xl px-4 py-2"
+                                    :class="warnaStatus">
+                                    {{ statusPerawatan }}
                                 </div>
                             </div>
                         </div>
@@ -108,6 +120,14 @@ const formatTanggal = (tanggal) => {
                             <Link :href="route('form-resep', pendaftaran.no_registrasi)"
                                 class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition flex items-center justify-center">
                                 Input Resep Obat
+                            </Link>
+                            <Link :href="route('form-diagnosa', pendaftaran.no_registrasi)"
+                                class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition flex items-center justify-center">
+                                Input Diagnosa
+                            </Link>
+                            <Link :href="route('form-diagnosa', pendaftaran.no_registrasi)"
+                                class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition flex items-center justify-center">
+                                Edit Data
                             </Link>
                         </div>
 

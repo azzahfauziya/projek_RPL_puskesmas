@@ -13,7 +13,7 @@ class RekamMedis extends Model
 
     protected $fillable = [
         'id_rekam_medis', 'no_registrasi', 'id_dokter', 'id_perawat',
-        'diagnosa', 'tinggi_badan', 'berat_badan', 'waktu_input'
+        'diagnosa', 'tinggi_badan', 'berat_badan', 'tensi', 'suhu'
     ];
 
     public function pendaftaran() {
