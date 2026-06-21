@@ -48,6 +48,7 @@ class KwitansiController extends Controller
             'totalKotor'    => $totalKotor,
             'potongan'      => $potongan,
             'totalBayar'    => $totalBayar,
+            'sudahDibayar'  => $pendaftaran->billing?->jumlah_dibayarkan ?? 0,
         ]);
     }
 }

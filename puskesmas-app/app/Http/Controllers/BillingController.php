@@ -43,13 +43,15 @@ class BillingController extends Controller
         $billing = Billing::where('no_registrasi', $request->no_registrasi)->first();
 
         if ($billing) {
+            $sudahDibayar = $billing->jumlah_dibayarkan + $request->jumlah_dibayarkan;
+            $statusPembayaran = $sudahDibayar >= $totalBayar ? 'lunas' : 'belum_lunas';
             $billing->update([
                 'metode_pembayaran'  => $request->metode_pembayaran,
-                'jumlah_dibayarkan'  => $request->jumlah_dibayarkan,
+                'jumlah_dibayarkan'  => $sudahDibayar,
                 'status_pembayaran'  => $statusPembayaran,
                 'waktu_bayar'        => Carbon::now(),
             ]);
-        } else {
+            } else {
             // Generate id_billing
             $id_billing = IdGenerator::generateIdBilling();
 

@@ -176,9 +176,15 @@ function submit() {
                             <!-- Kelas BPJS -->
                             <div class="grid grid-cols-[220px_1fr] items-center mb-6">
                                 <label class="font-medium text-xl">Kelas BPJS</label>
-                                <input type="text" v-model="form.kelas_bpjs" :readonly="isExisting"
+                                <select v-model="form.kelas_bpjs" :disabled="isExisting"
                                     :class="isExisting ? 'bg-gray-100 text-gray-500' : 'bg-white'"
-                                    class="h-12 border border-gray-500 rounded-lg px-4 w-full" />
+                                    class="h-12 border border-gray-500 rounded-lg px-4 w-full">
+                                    <option value="">-- Pilih Kelas BPJS --</option>
+                                    <option value="Kelas 1">Kelas 1</option>
+                                    <option value="Kelas 2">Kelas 2</option>
+                                    <option value="Kelas 3">Kelas 3</option>
+                                    <option value="Umum">Umum</option>
+                                </select>
                             </div>
 
                             <!-- Tanggal Kunjungan -->

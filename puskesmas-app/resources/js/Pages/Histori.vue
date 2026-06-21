@@ -1,195 +1,227 @@
+<script setup>
+import { ref, computed } from 'vue'
+import { router } from '@inertiajs/vue3'
+import NavBar from '@/Components/NavBar.vue'
+import SideBar from '@/Components/SideBar.vue'
+
+const props = defineProps({
+    pasien: Object,
+    kunjungan: { type: Array, default: () => [] },
+})
+
+const sidebarOpen = ref(false)
+const currentPage = ref(1)
+const filterTanggal = ref('')
+const dateInput = ref(null)
+
+function openDatePicker() {
+    dateInput.value.showPicker()
+}
+
+const filtered = computed(() => {
+    if (!filterTanggal.value) return props.kunjungan
+    return props.kunjungan.filter(k => k.tanggal_kunjungan === filterTanggal.value)
+})
+
+const totalPages = computed(() => filtered.value.length)
+
+const current = computed(() => filtered.value[currentPage.value - 1] ?? null)
+
+const formatTanggal = (tgl) => {
+    return new Date(tgl).toLocaleDateString('id-ID', {
+        weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    })
+}
+</script>
+
 <template>
-    <div class="min-h-screen bg-gray-100 p-8">
-        <div class="bg-green-100 rounded-lg p-8 shadow">
-            <h1 class="text-3xl mb-8 font-extrabold text-emerald-800 dark:text-emerald-400">
-                Keterangan Pasien
-            </h1>
+    <div class="flex h-screen overflow-hidden bg-slate-100">
+        <SideBar :open="sidebarOpen" />
+        <div class="flex flex-1 flex-col overflow-hidden">
+            <NavBar :open="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
+            <main class="flex-1 overflow-y-auto p-8">
 
-            <div class="grid grid-cols-3 gap-8">
-
-                <!-- Kolom 1 -->
-                <div>
-                    <div class="flex mb-6">
-                        <span class="font-bold w-40">No RM</span>
-                        <span class="mr-4">:</span>
-                        <span>08253674887</span>
-                    </div>
-
-                    <div class="flex mb-6">
-                        <span class="font-bold w-40">Nama Pasien</span>
-                        <span class="mr-4">:</span>
-                        <span>Soso Momomo</span>
-                    </div>
-
-                    <div class="flex">
-                        <span class="font-bold w-40">Tanggal Lahir</span>
-                        <span class="mr-4">:</span>
-                        <span>28-04-2026</span>
-                    </div>
-                </div>
-
-                <!-- Kolom 2 -->
-                <div>
-                    <div class="flex mb-6">
-                        <span class="font-bold w-40">Jenis Kelamin</span>
-                        <span class="mr-4">:</span>
-                        <span>Laki-laki</span>
-                    </div>
-
-                    <div class="flex mb-6">
-                        <span class="font-bold w-40">TB / BB</span>
-                        <span class="mr-4">:</span>
-                        <span>170 cm / 50 kg</span>
-                    </div>
-
-                    <div class="flex">
-                        <span class="font-bold w-40">Kelas BPJS</span>
-                        <span class="mr-4">:</span>
-                        <span>1</span>
-                    </div>
-                </div>
-
-                <!-- Kolom 3 -->
-                <div>
-                    <div class="flex mb-6">
-                        <span class="font-bold w-40">Alamat</span>
-                        <span class="mr-4">:</span>
-                        <span>Jalan Veteran No 4, Depok, Sleman</span>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="bg-white border-4 border-blue-500 rounded-2xl p-8 mt-4 shadow overflow-hidden">
-            <div class="grid grid-cols-3 gap-8 items-start">
-                <!-- Kolom Kiri -->
-                <div>
-                    <div class="flex mb-6">
-                        <span class="font-bold w-40">No Registrasi</span>
-                        <span class="mr-4">:</span>
-                        <span>REG-01234</span>
-                    </div>
-
-                    <div class="flex mb-6">
-                        <span class="font-bold w-40 shrink-0">Keluhan Awal</span>
-                        <span class="mr-4 shrink-0">:</span>
-                        <span>
-                            Pusing, Mual, bintik-bintik merah
-                        </span>
-                    </div>
-                </div>
-
-                <div>
-                    <div class="flex">
-                        <span class="font-bold w-40">Diagnosa</span>
-                        <span class="mr-4">:</span>
-                        <span>Demam Berdarah Dengue</span>
-                    </div>
-                </div>
-
-                <!-- Tanggal -->
-                <div class="border border-emerald-700 rounded-2xl px-6 py-5 min-w-[260px] items-center">
-
-                    <div class="flex items-center gap-4">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
-                            stroke="currentColor" class="size-8 text-emerald-800">
-
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M6.75 3v2.25M17.25 3v2.25M3.75 8.25h16.5M4.5 6h15A1.5 1.5 0 0 1 21 7.5v12A1.5 1.5 0 0 1 19.5 21h-15A1.5 1.5 0 0 1 3 19.5v-12A1.5 1.5 0 0 1 4.5 6Z" />
-
+                <!-- Filter tanggal -->
+                <div class="flex justify-end mb-4 gap-2 items-center">
+                    <span v-if="filterTanggal" class="text-xs text-slate-600">{{ filterTanggal }}</span>
+                    <button v-if="filterTanggal" @click="filterTanggal = ''; currentPage = 1" class="text-slate-400 hover:text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                         </svg>
+                    </button>
+                    <button @click="openDatePicker" class="text-slate-500 hover:text-emerald-700 p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                        </svg>
+                    </button>
+                    <input ref="dateInput" v-model="filterTanggal" @change="currentPage = 1" type="date" class="w-1 h-1 opacity-0 absolute" />
+                </div>
 
-                        <span class="font-semibold text-lg">
-                            Selasa, 28 April 2026
-                        </span>
+                <div v-if="!current" class="text-center text-slate-400 py-16">Tidak ada data kunjungan</div>
 
+                <template v-else>
+                    <!-- Keterangan Pasien -->
+                    <div class="bg-green-100 rounded-lg p-8 shadow">
+                        <h1 class="text-3xl mb-8 font-extrabold text-emerald-800">Keterangan Pasien</h1>
+                        <div class="grid grid-cols-3 gap-8">
+                            <div>
+                                <div class="flex mb-6">
+                                    <span class="font-bold w-40">No RM</span>
+                                    <span class="mr-4">:</span>
+                                    <span>{{ pasien.no_rm }}</span>
+                                </div>
+                                <div class="flex mb-6">
+                                    <span class="font-bold w-40">Nama Pasien</span>
+                                    <span class="mr-4">:</span>
+                                    <span>{{ pasien.nama }}</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="font-bold w-40">Tanggal Lahir</span>
+                                    <span class="mr-4">:</span>
+                                    <span>{{ pasien.tanggal_lahir }}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex mb-6">
+                                    <span class="font-bold w-40">Jenis Kelamin</span>
+                                    <span class="mr-4">:</span>
+                                    <span>{{ pasien.jenis_kelamin }}</span>
+                                </div>
+                                <div class="flex mb-6">
+                                    <span class="font-bold w-40">TB / BB</span>
+                                    <span class="mr-4">:</span>
+                                    <span>{{ pasien.tinggi_badan ?? '-' }} cm / {{ pasien.berat_badan ?? '-' }} kg</span>
+                                </div>
+                                <div class="flex">
+                                    <span class="font-bold w-40">Kelas BPJS</span>
+                                    <span class="mr-4">:</span>
+                                    <span>{{ pasien.kelas_bpjs }}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex">
+                                    <span class="font-bold w-40">Alamat</span>
+                                    <span class="mr-4">:</span>
+                                    <span>{{ pasien.alamat }}</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                </div>
-            </div>
-        </div>
+                    <!-- Info Kunjungan -->
+                    <div class="bg-white border-2 rounded-2xl p-8 mt-4">
+                        <div class="grid grid-cols-3 gap-8 items-start">
+                            <div>
+                                <div class="flex mb-6">
+                                    <span class="font-bold w-40">No Registrasi</span>
+                                    <span class="mr-4">:</span>
+                                    <span>{{ current.no_registrasi }}</span>
+                                </div>
+                                <div class="flex mb-6">
+                                    <span class="font-bold w-40 shrink-0">Keluhan Awal</span>
+                                    <span class="mr-4 shrink-0">:</span>
+                                    <span>{{ current.keluhan ?? '-' }}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex">
+                                    <span class="font-bold w-40">Diagnosa</span>
+                                    <span class="mr-4">:</span>
+                                    <span>{{ current.diagnosa ?? '-' }}</span>
+                                </div>
+                            </div>
+                            <div class="border border-emerald-700 rounded-2xl px-6 py-5">
+                                <div class="flex items-center gap-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="size-8 text-emerald-800">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3.75 8.25h16.5M4.5 6h15A1.5 1.5 0 0 1 21 7.5v12A1.5 1.5 0 0 1 19.5 21h-15A1.5 1.5 0 0 1 3 19.5v-12A1.5 1.5 0 0 1 4.5 6Z" />
+                                    </svg>
+                                    <span class="font-semibold text-lg">{{ formatTanggal(current.tanggal_kunjungan) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-        <div class="my-4 bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-            <h1 class="text-2xl p-4 font-extrabold text-emerald-800 dark:text-emerald-400">
-                Tindakan
-            </h1>
-            <div>
-                <div class="pl-4 pr-4 pb-4 text-center"> <!-- Ganti p-40 ke p-4 biar ga kegedean -->
-                    <table class="table-auto w-full">
-                        <thead>
-                            <tr class="bg-gray-200 dark:bg-gray-700">
-                                <th class="py-3 px-4 rounded-l-lg">ID Tindakan</th>
-                                <th class="py-3 px-4 ">Nama Tindakan</th>
-                                <th class="py-3 px-4 rounded-r-lg">Jumlah</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b dark:border-gray-700">
-                                <td class="py-3 px-4">1222</td>
-                                <td class="py-3 px-4">Cek Laboratorium</td>
-                                <td class="py-3 px-4">3</td>
-                            </tr>
-                            <tr class="border-b dark:border-gray-700">
-                                <td class="py-3 px-4">1222</td>
-                                <td class="py-3 px-4">Cek Laboratorium</td>
-                                <td class="py-3 px-4">3</td>
-                            </tr>
-                            <tr class="border-b dark:border-gray-700">
-                                <td class="py-3 px-4">1222</td>
-                                <td class="py-3 px-4">Cek Laboratorium</td>
-                                <td class="py-3 px-4">3</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <h1 class="text-2xl p-4 font-extrabold text-emerald-800 dark:text-emerald-400">
-                Obat
-            </h1>
-            <div>
-                <div class="pl-4 pr-4 pb-4 text-center"> <!-- Ganti p-40 ke p-4 biar ga kegedean -->
-                    <table class="table-auto w-full">
-                        <thead>
-                            <tr class="bg-gray-200 dark:bg-gray-700">
-                                <th class="py-3 px-4 rounded-l-lg">ID Obat</th>
-                                <th class="py-3 px-4 ">Nama Obat</th>
-                                <th class="py-3 px-4 ">Jumlah</th>
-                                <th class="py-3 px-4 rounded-r-lg">Aturan Pakai</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b dark:border-gray-700">
-                                <td class="py-3 px-4">1222</td>
-                                <td class="py-3 px-4">Cek Laboratorium</td>
-                                <td class="py-3 px-4">3</td>
-                                <td class="py-3 px-4">3x sehari setelah makan</td>
-                            </tr>
-                            <tr class="border-b dark:border-gray-700">
-                                <td class="py-3 px-4">1222</td>
-                                <td class="py-3 px-4">Cek Laboratorium</td>
-                                <td class="py-3 px-4">3</td>
-                                <td class="py-3 px-4">3x sehari setelah makan</td>
-                            </tr>
-                            <tr class="border-b dark:border-gray-700">
-                                <td class="py-3 px-4">1222</td>
-                                <td class="py-3 px-4">Cek Laboratorium</td>
-                                <td class="py-3 px-4">3</td>
-                                <td class="py-3 px-4">3x sehari setelah makan</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                    <!-- Tindakan & Obat -->
+                    <div class="my-4 bg-white rounded-lg shadow overflow-hidden">
+                        <h1 class="text-2xl p-4 font-extrabold text-emerald-800">Tindakan</h1>
+                        <div class="pl-4 pr-4 pb-4 text-center">
+                            <table class="table-auto w-full">
+                                <thead>
+                                    <tr class="bg-gray-200">
+                                        <th class="py-3 px-4 rounded-l-lg">ID Tindakan</th>
+                                        <th class="py-3 px-4">Nama Tindakan</th>
+                                        <th class="py-3 px-4 rounded-r-lg">Jumlah</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-if="current.tindakan.length === 0">
+                                        <td colspan="3" class="py-6 text-slate-400">Belum ada tindakan</td>
+                                    </tr>
+                                    <tr v-for="t in current.tindakan" :key="t.id_tindakan" class="border-b">
+                                        <td class="py-3 px-4">{{ t.id_tindakan }}</td>
+                                        <td class="py-3 px-4">{{ t.nama_tindakan }}</td>
+                                        <td class="py-3 px-4">{{ t.jumlah }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-            <div class="flex mt-4 p-4">
-                <button
-                    class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-6 py-3 rounded-lg shadow-md flex items-center gap-2">
-                    Lihat Kwitansi
-                </button>
-            </div>
+                        <h1 class="text-2xl p-4 font-extrabold text-emerald-800">Obat</h1>
+                        <div class="pl-4 pr-4 pb-4 text-center">
+                            <table class="table-auto w-full">
+                                <thead>
+                                    <tr class="bg-gray-200">
+                                        <th class="py-3 px-4 rounded-l-lg">ID Obat</th>
+                                        <th class="py-3 px-4">Nama Obat</th>
+                                        <th class="py-3 px-4">Jumlah</th>
+                                        <th class="py-3 px-4 rounded-r-lg">Aturan Pakai</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-if="current.obat.length === 0">
+                                        <td colspan="4" class="py-6 text-slate-400">Belum ada obat</td>
+                                    </tr>
+                                    <tr v-for="o in current.obat" :key="o.id_obat" class="border-b">
+                                        <td class="py-3 px-4">{{ o.id_obat }}</td>
+                                        <td class="py-3 px-4">{{ o.nama_obat }}</td>
+                                        <td class="py-3 px-4">{{ o.jumlah }}</td>
+                                        <td class="py-3 px-4">{{ o.aturan_pakai }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
+                        <div class="flex mt-4 p-4">
+                            <button @click="router.visit(route('kwitansi', { no_registrasi: current.no_registrasi }))"
+                                class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-6 py-3 rounded-lg shadow-md flex items-center gap-2">
+                                Lihat Kwitansi
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="flex justify-center gap-2 mt-2 items-center">
+                        <button @click="currentPage--" :disabled="currentPage === 1"
+                            class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800 disabled:opacity-40">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                            </svg>
+                        </button>
+
+                        <span class="text-sm text-slate-600 font-medium">
+                            Kunjungan {{ currentPage }} dari {{ totalPages }}
+                        </span>
+
+                        <button @click="currentPage++" :disabled="currentPage === totalPages"
+                            class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800 disabled:opacity-40">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                            </svg>
+                        </button>
+                    </div>
+                </template>
+
+            </main>
         </div>
     </div>
 </template>

@@ -44,7 +44,7 @@ const menuPerRole = {
     dokter: [
         { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/dokter' },
         { name: 'Daftar Antrian', icon: ClipboardDocumentListIcon, href: '/antrian' },
-        { name: 'Data Pasien', icon: UserGroupIcon, href: '/pasien' },
+        { name: 'Data Pasien', icon: UserGroupIcon, href: '/data-pasien' },
         { name: 'Data Obat', icon: ClipboardDocumentListIcon, href: '/obat-dokter' },
         { name: 'Data Resep', icon: ClipboardDocumentListIcon, href: '/resep' },
     ],

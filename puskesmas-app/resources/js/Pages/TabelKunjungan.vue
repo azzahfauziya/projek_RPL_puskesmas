@@ -110,7 +110,10 @@ const paginated = computed(() => {
                                         <td class="py-3 px-4 text-slate-600">{{ item.tanggal_kunjungan }}</td>
                                         <td class="py-3 px-4 text-center">
                                             <button @click="router.visit(route('tagihan', item.no_registrasi))"
-                                                class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md text-xs">
+                                                :class="item.status_pembayaran === 'lunas' 
+                                                    ? 'bg-emerald-700 hover:bg-emerald-800' 
+                                                    : 'bg-red-600 hover:bg-red-700'"
+                                                class="text-white font-semibold px-4 py-1 rounded-lg shadow-md text-xs">
                                                 Tagihan
                                             </button>
                                         </td>

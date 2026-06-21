@@ -48,6 +48,7 @@ class TindakanController extends Controller
                 'id_rekam_medis' => IdGenerator::generateIdRekamMedis(),
                 'no_registrasi'  => $request->no_registrasi,
                 'no_rm'          => $pendaftaran->no_rm,
+                'id_dokter'      => Auth::user()->dokter->id_dokter,
             ]);
         }
 

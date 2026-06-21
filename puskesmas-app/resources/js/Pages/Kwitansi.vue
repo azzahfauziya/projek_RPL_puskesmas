@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { useForm, router } from '@inertiajs/vue3'
+import { useForm, router, usePage } from '@inertiajs/vue3'
 import NavBar from '@/Components/NavBar.vue'
 import SideBar from '@/Components/SideBar.vue'
 
@@ -13,8 +13,11 @@ const props = defineProps({
     totalKotor: { type: Number, default: 0 },
     potongan: { type: Number, default: 0 },
     totalBayar: { type: Number, default: 0 },
+    sudahDibayar: { type: Number, default: 0 }, // dari billing sebelumnya
 })
 
+const page = usePage()
+const showSuccess = computed(() => !!page.props.flash?.success)
 const sidebarOpen = ref(false)
 
 const form = useForm({
@@ -24,24 +27,37 @@ const form = useForm({
 })
 
 function submit() {
-    form.post(route('billing.store'))
+    form.post(route('billing.store'), {
+        onSuccess: () => {
+            sudahProses.value = true
+        }
+    })
 }
 
+const sudahProses = ref(false)
 const formatRupiah = (angka) => {
     return new Intl.NumberFormat('id-ID', {
         style: 'currency', currency: 'IDR', minimumFractionDigits: 0
     }).format(angka ?? 0)
 }
 
-const kekurangan = computed(() => {
-    const dibayar = Number(form.jumlah_dibayarkan) || 0
-    const sisa = props.totalBayar - dibayar
-    return sisa > 0 ? sisa : 0
-})
 
 const statusLunas = computed(() => {
+    if (!sudahProses.value) return false
     const dibayar = Number(form.jumlah_dibayarkan) || 0
-    return dibayar >= props.totalBayar
+    const total = Number(props.totalBayar) || 0
+    const sudah = Number(props.sudahDibayar) || 0
+    return (sudah + dibayar) >= total
+})
+
+const sisaTagihan = computed(() => {
+    return Number(props.totalBayar) - Number(props.sudahDibayar)
+})
+
+const kekurangan = computed(() => {
+    const dibayar = Number(form.jumlah_dibayarkan) || 0
+    const sisa = sisaTagihan.value - dibayar
+    return sisa > 0 ? sisa : 0
 })
 </script>
 
@@ -230,11 +246,9 @@ const statusLunas = computed(() => {
                         </div>
                     </div>
 
-                    <!-- Metode Pembayaran + Jumlah Bayar -->
                     <div v-if="!statusLunas" class="grid grid-cols-2 gap-4 mt-4">
-
                         <!-- Metode Pembayaran -->
-                        <div class="bg-white bg-gray-800 rounded-2xl shadow border border-emerald-700 p-6">
+                        <div class="bg-white rounded-2xl shadow border border-emerald-700 p-6">
                             <label class="block text-2xl font-extrabold text-emerald-800 mb-4">
                                 Metode Pembayaran
                             </label>
@@ -246,28 +260,33 @@ const statusLunas = computed(() => {
                                 <option value="Kredit">Kredit</option>
                                 <option value="QRIS">QRIS</option>
                             </select>
-
-                            <input v-model="form.jumlah_dibayarkan" type="number"
-                                placeholder="Masukkan nominal yang dibayarkan"
-                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
                         </div>
 
                         <!-- Jumlah Dibayarkan -->
-                        <div class="bg-white bg-gray-800 rounded-2xl shadow border border-emerald-700 p-6">
+                        <div class="bg-white rounded-2xl shadow border border-emerald-700 p-6">
                             <label class="block text-2xl font-extrabold text-emerald-800 mb-4">
                                 Jumlah yang dibayarkan
                             </label>
-
-                            <input type="number" placeholder="Masukkan nominal yang dibayarkan"
+                            <input v-model="form.jumlah_dibayarkan" type="number"
+                                placeholder="Masukkan nominal yang dibayarkan"
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                            
+                            <!-- Info cicilan sebelumnya -->
+                            <div v-if="sudahDibayar > 0" class="mt-3 text-sm text-slate-600">
+                                Sudah dibayar sebelumnya: <span class="font-semibold text-emerald-700">{{ formatRupiah(sudahDibayar) }}</span>
+                            </div>
+                            <div v-if="sudahDibayar > 0" class="mt-1 text-sm text-slate-600">
+                                Sisa tagihan: <span class="font-semibold text-red-600">{{ formatRupiah(sisaTagihan) }}</span>
+                            </div>
                         </div>
-
                     </div>
-
                     <!-- Status Pembayaran -->
+                     <!-- <pre>totalBayar: {{ totalBayar }} | sudahDibayar: {{ sudahDibayar }} | input: {{ form.jumlah_dibayarkan }}</pre>
+                     <pre>statusLunas: {{ statusLunas }} | kekurangan: {{ kekurangan }}</pre> -->
                     <div class="flex flex-col items-center mt-7 rounded-lg p-8 shadow"
-                        style="background-color: rgba(209, 250, 229, 0.6)">
-                        <h2 class="text-2xl font-extrabold text-emerald-900 mb-3">
+                        :style="statusLunas ? 'background-color: rgba(209, 250, 229, 0.6)' : 'background-color: rgba(254, 202, 202, 0.6)'">
+                        <h2 class="text-2xl font-extrabold mb-3"
+                            :class="statusLunas ? 'text-emerald-900' : 'text-red-700'">
                             Status Pembayaran
                         </h2>
 
@@ -275,28 +294,24 @@ const statusLunas = computed(() => {
                             <svg v-if="statusLunas" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="2.5" stroke="currentColor" class="size-10 text-emerald-900">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75" />
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>
                             <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 stroke-width="2.5" stroke="currentColor" class="size-10 text-red-600">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
                             </svg>
-
                             <span :class="statusLunas ? 'text-emerald-800' : 'text-red-600'"
                                 class="text-5xl font-extrabold">
                                 {{ statusLunas ? 'LUNAS' : 'BELUM LUNAS' }}
                             </span>
                         </div>
 
-                        <!-- Kekurangan bayar -->
                         <div v-if="!statusLunas && form.jumlah_dibayarkan"
                             class="mt-4 text-red-600 font-semibold text-lg">
                             Kekurangan: {{ formatRupiah(kekurangan) }}
                         </div>
                     </div>
-
                     <!-- Tombol hanya muncul kalau belum lunas -->
                     <div v-if="!statusLunas" class="flex justify-end mt-4">
                         <button @click="submit" :disabled="form.processing"
@@ -306,6 +321,24 @@ const statusLunas = computed(() => {
                     </div>
                 </div>
             </main>
+        </div>
+
+        <!-- Pop up  -->
+        <div v-if="showSuccess"
+            class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+            <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col items-center gap-4 max-w-sm w-full">
+                <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 text-emerald-600">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                </div>
+                <h2 class="text-xl font-bold text-gray-800">Pembayaran Berhasil!</h2>
+                <p class="text-gray-500 text-center text-sm">{{ page.props.flash.success }}</p>
+                <button @click="router.visit(route('kwitansi', { no_registrasi: pendaftaran.no_registrasi }))"
+                    class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-6 py-2 rounded-lg w-full">
+                    OK
+                </button>
+            </div>
         </div>
     </div>
 </template>

@@ -20,7 +20,6 @@ console.log('profil:', page.props.auth?.profil)  // ← cek di browser console
 
 const props = defineProps({
     pendaftaranHariIni: Number,
-    // ... props lain
 })
 </script>
 
