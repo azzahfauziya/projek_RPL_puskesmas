@@ -1,9 +1,11 @@
 <?php
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use Inertia\Inertia;
 use App\Models\Obat;
+use App\Helpers\IdGenerator;
 
 class EditObatController extends Controller
 {
@@ -19,15 +21,31 @@ class EditObatController extends Controller
     public function updateSemua(Request $request)
     {
         foreach ($request->obat as $item) {
-            Obat::where('id_obat', $item['id_obat'])->update([
-                'nama_obat' => $item['nama_obat'],
-                'stok' => $item['stok'],
-                'harga_satuan' => $item['harga_satuan'],
-                'bentuk' => $item['bentuk'],
-                'satuan' => $item['satuan'],
-            ]);
+
+            if (empty($item['id_obat'])) {
+
+                Obat::create([
+                    'id_obat' => IdGenerator::generateIdObat(),
+                    'id_apoteker' => Auth::user()->apoteker->id_apoteker,
+                    'nama_obat' => $item['nama_obat'],
+                    'stok' => $item['stok'],
+                    'harga_satuan' => $item['harga_satuan'],
+                    'bentuk' => $item['bentuk'],
+                    'satuan' => $item['satuan'],
+                ]);
+
+            } else {
+
+                Obat::where('id_obat', $item['id_obat'])->update([
+                    'nama_obat' => $item['nama_obat'],
+                    'stok' => $item['stok'],
+                    'harga_satuan' => $item['harga_satuan'],
+                    'bentuk' => $item['bentuk'],
+                    'satuan' => $item['satuan'],
+                ]);
+            }
         }
 
-        return to_route('obat.apoteker');
+        return redirect()->route('obat.apoteker');
     }
 }

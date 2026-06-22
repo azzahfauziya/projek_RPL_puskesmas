@@ -25,6 +25,18 @@ import { router } from '@inertiajs/vue3'
             obat: props.obat
         })
     }
+
+    const tambahObat = () => {
+        props.obat.push({
+            id_obat: '',
+            nama_obat: '',
+            stok: 0,
+            harga_satuan: 0,
+            bentuk: '',
+            satuan: '',
+            is_new: true
+        })
+    }
 </script> 
 
 <template>
@@ -40,9 +52,11 @@ import { router } from '@inertiajs/vue3'
 
             <!-- Kolom Kanan: Search -->
             <div>
-                <input v-model="search" type="text"
-                    class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                    placeholder="Cari obat berdasarkan ID / Nama" />
+                <div>
+                    <input v-model="search" type="text"
+                        class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        placeholder="Cari obat berdasarkan ID / Nama" />
+                </div>
             </div>
         </div>
 
@@ -56,7 +70,8 @@ import { router } from '@inertiajs/vue3'
                             <th class="py-3 px-4 ">Nama</th>
                             <th class="py-3 px-4 ">Stok</th>
                             <th class="py-3 px-4 ">Harga Satuan</th>
-                            <th class="py-3 px-4 rounded-r-lg">Bentuk</th>
+                            <th class="py-3 px-4 ">Bentuk</th>
+                            <th class="py-3 px-4 rounded-r-lg">Satuan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -90,15 +105,29 @@ import { router } from '@inertiajs/vue3'
                                 <input v-model="item.bentuk" type="text"
                                     class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg" />
                             </td>
+
+                            <td class="py-3 px-4">
+                                <input v-model="item.satuan" type="text"
+                                    class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg" />
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
         <!-- tombol pindah halaman -->
-        <div class="flex justify-end mt-6">
+        <div class="flex justify-end items-center gap-4 mt-6">
+            <button @click="tambahObat"
+                class="flex items-center gap-2 bg-white border-2 border-green-900 text-green-900 hover:bg-green-50 font-semibold px-6 py-3 rounded-xl transition duration-200 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                    stroke="currentColor" class="w-5 h-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                Tambah Obat
+            </button>
+
             <button @click="simpanSemua"
-                class="bg-green-900 hover:bg-green-800 text-white font-semibold text-xl px-16 py-3 rounded-xl">
+                class="flex items-center gap-2 bg-green-900 hover:bg-green-800 text-white font-semibold px-8 py-3 rounded-xl transition duration-200 shadow-md">
                 Simpan
             </button>
         </div>   

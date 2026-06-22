@@ -92,4 +92,18 @@ class IdGenerator
         $lastNum = $last ? (int) substr($last->id_billing, 3) : 0;
         return 'BIL' . str_pad($lastNum + 1, 4, '0', STR_PAD_LEFT);
     }
+
+    public static function generateIdObat()
+    {
+        $last = \App\Models\Obat::orderBy('id_obat', 'desc')->first();
+
+        if (!$last) {
+            return 'OBT-001';
+        }
+
+        $number = (int) substr($last->id_obat, 4);
+        $number++;
+
+        return 'OBT-' . str_pad($number, 3, '0', STR_PAD_LEFT);
+    }
 }

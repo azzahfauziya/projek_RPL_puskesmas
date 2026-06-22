@@ -136,23 +136,39 @@ class PendaftaranController extends Controller
             $request->no_registrasi
         )->firstOrFail();
 
-        $pasien = Pasien::where(
-            'no_rm',
-            $pendaftaran->no_rm
-        )->firstOrFail();
+        $noRmLama = $pendaftaran->no_rm;
 
-        $pasien->update([
-            'nama' => $request->nama,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'alamat' => $request->alamat,
-            'no_hp' => $request->no_hp,
-            'kelas_bpjs' => $request->kelas_bpjs,
-        ]);
+        if ($request->is_existing && $request->no_rm) {
+            // Pasien existing dipilih → pindahkan pendaftaran ke no_rm yang ada
+            $pendaftaran->update([
+                'no_rm' => $request->no_rm,
+                'keluhan_awal' => $request->keluhan_awal,
+            ]);
 
-        $pendaftaran->update([
-            'keluhan_awal' => $request->keluhan_awal,
-        ]);
+            // Hapus pasien darurat sementara
+            Pasien::where('no_rm', $noRmLama)->delete();
+
+        } else {
+            // Pasien baru → generate no_rm normal (bukan RMD)
+            $noRmBaru = IdGenerator::generateNoRm();
+
+            // Update data pasien darurat (ganti no_rm-nya)
+            Pasien::where('no_rm', $noRmLama)->update([
+                'no_rm'         => $noRmBaru,
+                'nama'          => $request->nama,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'alamat'        => $request->alamat,
+                'no_hp'         => $request->no_hp,
+                'kelas_bpjs'    => $request->kelas_bpjs,
+            ]);
+
+            // Update pendaftaran pakai no_rm baru
+            $pendaftaran->update([
+                'no_rm'        => $noRmBaru,
+                'keluhan_awal' => $request->keluhan_awal,
+            ]);
+        }
 
         return redirect()
             ->route('detail-pasien', $request->no_registrasi)
