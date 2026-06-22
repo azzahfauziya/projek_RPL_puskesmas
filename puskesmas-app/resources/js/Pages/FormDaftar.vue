@@ -17,13 +17,8 @@ const isExisting = computed(() => selectedPasien.value !== null)
 
 
 const props = defineProps({
-    pasienAwal: { type: Object, default: null }
-})
-
-onMounted(() => {
-    if (props.pasienAwal) {
-        pilihPasien(props.pasienAwal)
-    }
+    pasienAwal: { type: Object, default: null },
+    pendaftaranAwal: Object
 })
 
 const today = new Date()
@@ -32,6 +27,8 @@ const localToday = new Date(today - offset).toISOString().split('T')[0]
 
 
 const form = useForm({
+    mode: '',
+    no_registrasi: '',
     is_existing: false,
     no_rm: '',
     nama: '',
@@ -43,6 +40,36 @@ const form = useForm({
     // id_dokter:          '',
     keluhan_awal: '',
     tanggal_kunjungan: localToday,
+})
+
+onMounted(() => {
+    console.log('pendaftaranAwal', props.pendaftaranAwal)
+    if (props.pasienAwal) {
+        pilihPasien(props.pasienAwal)
+    }
+
+    if (props.pendaftaranAwal) {
+
+        const pasien = props.pendaftaranAwal.pasien
+
+        form.mode = 'edit_darurat'
+        console.log('MODE SET:', form.mode)
+        form.no_registrasi = props.pendaftaranAwal.no_registrasi
+
+        form.no_rm = pasien.no_rm
+        form.nama = pasien.nama === 'Pasien Darurat'
+            ? ''
+            : pasien.nama
+
+        form.tanggal_lahir = pasien.tanggal_lahir
+        form.jenis_kelamin = pasien.jenis_kelamin
+        form.alamat = pasien.alamat
+        form.no_hp = pasien.no_hp
+        form.kelas_bpjs = pasien.kelas_bpjs
+
+        form.keluhan_awal =
+            props.pendaftaranAwal.keluhan_awal
+    }
 })
 
 watch(searchQuery, async (val) => {
@@ -86,6 +113,16 @@ function resetForm() {
 }
 
 function submit() {
+    console.log('SUBMIT MODE:', form.mode)
+    if (form.mode === 'edit_darurat') {
+        console.log('UPDATE DARURAT')
+        form.put(
+            route('pendaftaran.updateDarurat')
+        )
+
+        return
+    }
+    console.log('STORE BARU')
     form.post('/pendaftaran', {
         onSuccess: () => {
             resetForm()
@@ -110,7 +147,11 @@ function submit() {
                         </div>
 
                         <div class="max-w-4xl mx-auto mt-5">
+                            <div class="grid grid-cols-[220px_1fr] items-center mb-6">
+                                <label class="font-blod text-xl pt-3">No Registrasi</label>
 
+                                <input :value="form.no_registrasi" readonly class="bg-gray-100 rounded-lg">
+                            </div>
                             <!-- Search No RM -->
                             <div class="grid grid-cols-[220px_1fr] items-start mb-6">
                                 <label class="font-bold text-xl pt-3">No. RM</label>

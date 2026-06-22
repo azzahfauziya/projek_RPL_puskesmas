@@ -12,6 +12,7 @@ const props = defineProps({
 const sidebarOpen = ref(false)
 const page = usePage()
 const showSuccess = computed(() => !!page.props.flash?.success)
+const showModal = ref(false)
 
 // Pisah dari useForm supaya reaktif
 const tindakanList = ref([{ id_tindakan: '', jumlah: null }])
@@ -33,10 +34,16 @@ function submit() {
         ...data,
         tindakan: tindakanList.value
     })).post(route('tindakan.simpan'), {
+        preserveScroll: true,
         onSuccess: () => {
-            tindakanList.value = [{ id_tindakan: '', jumlah: 1 }]
+            showModal.value = true
         }
     })
+}
+function kembaliKeDetail() {
+    router.visit(
+        route('detail-pasien', props.pendaftaran.no_registrasi)
+    )
 }
 </script>
 
@@ -143,7 +150,7 @@ function submit() {
                             </div>
 
                             <div class="flex justify-end">
-                                <button type="button" @click="submit"
+                                <button type="button" @click="kembaliKeDetail"
                                     class="bg-green-900 hover:bg-green-800 text-white font-semibold text-xl px-16 py-3 rounded-xl">
                                     Kirim
                                 </button>
@@ -153,7 +160,7 @@ function submit() {
                 </div>
 
                 <!-- Popup sukses -->
-                <div v-if="showSuccess" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                <div v-if="showModal" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                     <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col items-center gap-4 max-w-sm w-full">
                         <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -162,7 +169,7 @@ function submit() {
                             </svg>
                         </div>
                         <h2 class="text-xl font-bold text-gray-800">Tindakan Berhasil Disimpan!</h2>
-                        <button @click="router.visit(route('form-tindakan', pendaftaran.no_registrasi))"
+                        <button @click="submit"
                             class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-6 py-2 rounded-lg w-full">
                             OK
                         </button>

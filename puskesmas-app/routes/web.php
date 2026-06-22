@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/data-pasien', [PasienController::class, 'dataPasien'])->name('data-pasien');
         Route::get('/detail-pasien/{no_registrasi}', [PasienController::class, 'detailPasien'])->name('detail-pasien');
         Route::get('/histori-pasien/{no_rm}', [HistoriPasienController::class, 'show'])->name('histori-pasien');
+        Route::post('/pasien-darurat', [PendaftaranController::class, 'storeDarurat'])->name('pasien-darurat.store');
+        Route::get('/kwitansi/{no_registrasi}', [KwitansiController::class, 'show'])->name('kwitansi');
     });
 
     // Administrasi
@@ -49,36 +51,33 @@ Route::middleware('auth')->group(function () {
         Route::post('/pendaftaran', [PendaftaranController::class, 'store'])->name('pendaftaran.store');
         Route::get('/pasien/{no_rm}/detail', [PasienController::class, 'detail'])->name('pasien.detail');
         Route::get('/tagihan/{no_registrasi}', [TagihanController::class, 'show'])->name('tagihan');
-        Route::get('/kwitansi/{no_registrasi}', [KwitansiController::class, 'show'])->name('kwitansi');
+        // Route::get('/kwitansi/{no_registrasi}', [KwitansiController::class, 'show'])->name('kwitansi');
         Route::post('/billing', [BillingController::class, 'store'])->name('billing.store');
+        Route::get('/pendaftaran/edit/{no_registrasi}',[PendaftaranController::class, 'editDarurat'])->name('pendaftaran.edit');
+        Route::put('/pendaftaran/darurat/update',[PendaftaranController::class, 'updateDarurat'])->name('pendaftaran.updateDarurat');
+    });
+
+    Route::middleware(['role:dokter,perawat'])->group(function () {
+        Route::get('/obat', [ObatController::class, 'tabelObat'])->name('obat');
+        Route::get('/form-tindakan/{no_registrasi}', [TindakanController::class, 'formTindakan'])->name('form-tindakan');
+        Route::get('/form-resep/{no_registrasi}', [ResepController::class, 'formResep'])->name('form-resep');
+        Route::get('/form-diagnosa/{no_registrasi}', [DiagnosaController::class, 'create'])->name('form-diagnosa');
+        Route::post('/diagnosa', [DiagnosaController::class, 'store'])->name('diagnosa.store');
+        Route::post('/tindakan', [TindakanController::class, 'simpanTindakan'])->name('tindakan.simpan');
+        Route::post('/resep', [ResepController::class, 'simpan'])->name('resep.simpan');
+        Route::get('/resep', [ResepController::class, 'tabelResep'])->name('resep');
     });
 
     // Dokter
     Route::middleware(['role:dokter'])->group(function () {
         Route::get('/dashboard/dokter', [DashboardController::class, 'dokter'])->name('dashboard.dokter');
-        Route::get('/obat', [ObatController::class, 'tabelObat'])->name('obat');
         Route::get('/obat-dokter', [ObatController::class, 'tabelObat'])->name('obat.dokter');
-        Route::get('/form-tindakan/{no_registrasi}', [TindakanController::class, 'formTindakan'])->name('form-tindakan');
-        Route::get('/form-resep/{no_registrasi}', [ResepController::class, 'formResep'])->name('form-resep');
-        Route::get('/form-diagnosa/{no_registrasi}', [DiagnosaController::class, 'create'])->name('form-diagnosa');
-        Route::post('/diagnosa', [DiagnosaController::class, 'store'])->name('diagnosa.store');
-        Route::post('/tindakan', [TindakanController::class, 'simpanTindakan'])->name('tindakan.simpan');
-        Route::post('/resep', [ResepController::class, 'simpan'])->name('resep.simpan');
-        Route::get('/resep', [ResepController::class, 'tabelResep'])->name('resep');
     });
 
     // Perawat
     Route::middleware(['role:perawat'])->group(function () {
         Route::get('/dashboard/perawat', [DashboardController::class, 'perawat'])->name('dashboard.perawat');
-        Route::get('/obat', [ObatController::class, 'tabelObat'])->name('obat');
         Route::get('/obat-perawat', [ObatController::class, 'tabelObat'])->name('obat.perawat');
-        Route::get('/form-tindakan/{no_registrasi}', [TindakanController::class, 'formTindakan'])->name('form-tindakan');
-        Route::get('/form-resep/{no_registrasi}', [ResepController::class, 'formResep'])->name('form-resep');
-        Route::get('/form-diagnosa/{no_registrasi}', [DiagnosaController::class, 'create'])->name('form-diagnosa');
-        Route::post('/diagnosa', [DiagnosaController::class, 'store'])->name('diagnosa.store');
-        Route::post('/tindakan', [TindakanController::class, 'simpanTindakan'])->name('tindakan.simpan');
-        Route::post('/resep', [ResepController::class, 'simpan'])->name('resep.simpan');
-        Route::get('/resep', [ResepController::class, 'tabelResep'])->name('resep');
     });
 
     // Apoteker

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import { Link, usePage, useForm } from '@inertiajs/vue3'
 import NavBar from '@/Components/NavBar.vue'
 import SideBar from '@/Components/SideBar.vue'
 
@@ -9,9 +9,11 @@ const props = defineProps({
 })
 
 const sidebarOpen = ref(false)
+const showModal = ref(false)
 const search = ref('')
 const currentPage = ref(1)
 const perPage = 15
+const page = usePage()
 
 const filtered = computed(() => {
     const source = Array.isArray(props.antrian) ? props.antrian : []
@@ -31,6 +33,26 @@ const paginated = computed(() => {
 
 const totalPages = computed(() => Math.ceil(filtered.value.length / perPage))
 
+const form = useForm({
+    jenis_kelamin: '',
+    keluhan_awal: '',
+    tensi: '',
+    suhu: ''
+})
+
+const submitDarurat = () => {
+    form.post(route('pasien-darurat.store'), {
+        onSuccess: () => {
+            showModal.value = false
+
+            form.reset()
+        }
+    })
+}
+
+const role = computed(() => {
+    return page.props.auth?.user?.role
+})
 // const paginated = computed(() => {
 //     const start = (currentPage.value - 1) * perPage
 //     return filtered.value.slice(start, start + perPage)
@@ -76,9 +98,14 @@ const totalPages = computed(() => Math.ceil(filtered.value.length / perPage))
                                     </td>
                                 </tr>
                                 <tr v-for="item in paginated" :key="item.no_registrasi"
+                                :class="['border-b',
+                                        item.jenis_pendaftaran === 'darurat'
+                                            ? 'text-red-700 font-bold rounded-lg'
+                                            : ''
+                                    ]"
                                     class="border-b hover:bg-slate-50">
                                     <td class="py-3 px-4">{{ item.no_registrasi }}</td>
-                                    <td class="py-3 px-4">{{ item.no_rm }}</td> 
+                                    <td class="py-3 px-4">{{ item.no_rm }}</td>
                                     <td class="py-3 px-4 font-medium">{{ item.pasien?.nama }}</td>
                                     <td class="py-3 px-4 text-center">
                                         <Link :href="route('detail-pasien', item.no_registrasi)"
@@ -92,42 +119,124 @@ const totalPages = computed(() => Math.ceil(filtered.value.length / perPage))
                     </div>
                 </div>
 
-                <!-- Pagination -->
-                <div class="flex justify-end mt-4 gap-2">
-                    <button @click="currentPage = 1" :disabled="currentPage === 1"
-                        class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800 disabled:opacity-40">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
-                        </svg>
-                    </button>
-                    <button @click="currentPage--" :disabled="currentPage === 1"
-                        class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800 disabled:opacity-40">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                        </svg>
-                    </button>
+                <div class="grid grid-cols-4 gap-4 mb-6">
+                    <div class="col-span-1">
+                        <!-- tombol edit -->
+                        <div v-if="role === 'administrasi'" class="flex justify-start- mt-4">
+                            <button @click="showModal = true"
+                                class="pl-10 flex items-center justify-center text-red-800 font-extrabold">
+                                Tambahkan Pasien Darurat
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-span-3">
+                        <!-- tombol pindah halaman -->
+                        <div>
+                            <div class="flex justify-end mt-4 gap-2">
+                                <button @click="currentPage = 1" :disabled="currentPage === 1"
+                                    class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800 disabled:opacity-40">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
+                                    </svg>
+                                </button>
+                                <button @click="currentPage--" :disabled="currentPage === 1"
+                                    class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800 disabled:opacity-40">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="M15.75 19.5 8.25 12l7.5-7.5" />
+                                    </svg>
+                                </button>
 
-                    <button v-for="page in totalPages" :key="page" @click="currentPage = page"
-                        :class="currentPage === page ? 'bg-emerald-800 text-white' : 'text-emerald-800'"
-                        class="w-10 h-10 border border-emerald-800 rounded-lg">
-                        {{ page }}
-                    </button>
+                                <button v-for="page in totalPages" :key="page" @click="currentPage = page"
+                                    :class="currentPage === page ? 'bg-emerald-800 text-white' : 'text-emerald-800'"
+                                    class="w-10 h-10 border border-emerald-800 rounded-lg">
+                                    {{ page }}
+                                </button>
 
-                    <button @click="currentPage++" :disabled="currentPage === totalPages"
-                        class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800 disabled:opacity-40">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                        </svg>
-                    </button>
-                    <button @click="currentPage = totalPages" :disabled="currentPage === totalPages"
-                        class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800 disabled:opacity-40">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
-                        </svg>
-                    </button>
+                                <button @click="currentPage++" :disabled="currentPage === totalPages"
+                                    class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800 disabled:opacity-40">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                                    </svg>
+                                </button>
+                                <button @click="currentPage = totalPages" :disabled="currentPage === totalPages"
+                                    class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800 disabled:opacity-40">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                        stroke-width="1.5" stroke="currentColor" class="size-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                            d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </main>
+        </div>
+    </div>
+
+    <div v-if="showModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-xl p-8 w-[500px]">
+
+            <h2 class="text-2xl font-bold mb-6">
+                Pasien Darurat
+            </h2>
+
+            <form @submit.prevent="submitDarurat">
+
+                <div class="mb-4">
+                    <label>Jenis Kelamin</label>
+
+                    <select v-model="form.jenis_kelamin" class="w-full border rounded-lg p-3">
+                        <option value="">Pilih</option>
+                        <option value="L">Laki-laki</option>
+                        <option value="P">Perempuan</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <label>Keluhan Awal</label>
+
+                    <textarea v-model="form.keluhan_awal" class="w-full border rounded-lg p-3"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mb-6">
+
+                    <div>
+                        <label>Tensi</label>
+
+                        <input type="text" v-model="form.tensi" class="w-full border rounded-lg p-3"
+                            placeholder="120/80">
+                    </div>
+
+                    <div>
+                        <label>Suhu</label>
+
+                        <input type="number" step="0.1" v-model="form.suhu" class="w-full border rounded-lg p-3">
+                    </div>
+
+                </div>
+
+                <div class="flex justify-end gap-3">
+
+                    <button type="button" @click="showModal = false" class="px-5 py-2 border rounded-lg">
+                        Batal
+                    </button>
+
+                    <button type="submit" class="bg-red-600 text-white px-5 py-2 rounded-lg">
+                        Simpan
+                    </button>
+
+                </div>
+
+            </form>
+
         </div>
     </div>
 </template>

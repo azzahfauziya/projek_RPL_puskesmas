@@ -96,8 +96,10 @@ import SideBar from '@/Components/SideBar.vue'
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="item in obatTampil" :key="item.id_obat"
-                                    class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800">
+                                <tr v-for="item in obatTampil" :key="item.id_obat" class="border-b dark:border-gray-700"
+                                    :class="{
+                                        'bg-red-100 text-red-700 font-semibold': item.stok == 0
+                                    }">
                                     <td class="py-3 px-4">{{ item.id_obat }}</td>
                                     <td class="py-3 px-4">{{ item.nama_obat }}</td>
                                     <td class="py-3 px-4">{{ item.stok }}</td>

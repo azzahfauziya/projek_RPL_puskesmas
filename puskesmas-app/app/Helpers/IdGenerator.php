@@ -28,12 +28,19 @@ class IdGenerator
     public static function generateNoRegistrasi(): string
     {
         $today = Carbon::now()->format('Ymd');
-        $prefix = 'REG-' . $today . '-';
-        $last = Pendaftaran::where('no_registrasi', 'like', $prefix . '%')
+
+        $last = Pendaftaran::whereDate('tanggal_kunjungan', today())
             ->orderBy('no_registrasi', 'desc')
             ->first();
-        $lastNum = $last ? (int) substr($last->no_registrasi, -3) : 0;
-        return $prefix . str_pad($lastNum + 1, 3, '0', STR_PAD_LEFT);
+
+        if (!$last) {
+            $nomor = 1;
+        } else {
+            $parts = explode('-', $last->no_registrasi);
+            $nomor = (int) end($parts) + 1;
+        }
+
+        return 'REG-' . $today . '-' . str_pad($nomor, 2, '0', STR_PAD_LEFT);
     }
 
     // public static function generateIdRekamMedis(): string

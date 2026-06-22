@@ -25,7 +25,9 @@ class ResepController extends Controller
 
         return Inertia::render('FormResep', [
             'pendaftaran' => $pendaftaran,
-            'obat' =>  \App\Models\Obat::orderBy('nama_obat')->get()
+            'obat' =>  Obat::where('stok', '>', 0)
+                ->orderBy('nama_obat')
+                ->get()
         ]);
     }
     public function simpan(Request $request)
@@ -42,7 +44,7 @@ class ResepController extends Controller
             [
                 'id_resep'    => 'RSP-' . now()->format('ymdHi'),
                 'id_dokter'   => $rekamMedis->id_dokter,
-                'status'      => 'menunggu',
+                'status'      => 'proses',
                 'waktu_dibuat' => now(),
             ]
         );
@@ -56,8 +58,6 @@ class ResepController extends Controller
             'id_resep'             => $resep->id_resep,
             'id_obat'              => $request->id_obat,
             'nama_obat_saat_resep' => $obat->nama_obat,
-            'dosis'                => $request->dosis_obat,
-            'satuan_dosis'         => 'mg',
             'aturan_pakai'         => $request->aturan_pakai,
             'jumlah'               => $request->jumlah ?? 1,
         ]);
@@ -89,10 +89,24 @@ class ResepController extends Controller
 
     public function updateStatus(Request $request, $id_resep)
     {
-        Resep::where('id_resep', $id_resep)
-            ->update([
-                'status' => $request->status
-            ]);
+        $resep = Resep::with('detailResep')
+            ->where('id_resep', $id_resep)
+            ->firstOrFail();
+
+        if (
+            $request->status === 'selesai'
+            && $resep->status !== 'selesai'
+        ) {
+            foreach ($resep->detailResep as $detail) {
+
+                Obat::where('id_obat', $detail->id_obat)
+                    ->decrement('stok', $detail->jumlah);
+            }
+        }
+        
+        $resep->update([
+            'status' => $request->status
+        ]);
 
         return back();
     }

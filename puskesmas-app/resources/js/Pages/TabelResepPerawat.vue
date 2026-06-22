@@ -120,7 +120,7 @@ const lastPage = () => {
                                     </td>
 
                                     <td class="py-3 px-4">
-                                        {{ item.dosis }} {{ item.satuan_dosis }}
+                                        {{ item.jumlah }}
                                     </td>
 
                                     <td class="py-3 px-4">

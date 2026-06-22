@@ -75,4 +75,87 @@ class PendaftaranController extends Controller
 
         return redirect()->route('pendaftaran.form')->with('success', 'Pendaftaran berhasil.');
     }
+
+    private function generateNoRM()
+    {
+        $last = Pasien::orderBy('no_rm', 'desc')->first();
+
+        if (!$last) {
+            return 'RMD0001';
+        }
+
+        $number = (int) substr($last->no_rm, 3);
+        $number++;
+
+        return 'RMD' . str_pad($number, 4, '0', STR_PAD_LEFT);
+    }
+    
+    public function storeDarurat(Request $request)
+    {
+        $request->validate([
+            'jenis_kelamin' => 'required',
+            'keluhan_awal' => 'required',
+            'tensi' => 'required',
+            'suhu' => 'required'
+        ]);
+
+        $pasien = Pasien::create([
+            'no_rm' => $this->generateNoRM(),
+            'nama' => 'Pasien Darurat',
+            'jenis_kelamin' => $request->jenis_kelamin,
+        ]);
+
+        $pendaftaran = Pendaftaran::create([
+            'no_registrasi' => IdGenerator::generateNoRegistrasi(),
+            'no_rm' => $pasien->no_rm,
+            'id_administrasi'   => Auth::user()->administrasi->id_administrasi,
+            'keluhan_awal' => $request->keluhan_awal,
+            'jenis_pendaftaran' => 'darurat',
+            'tanggal_kunjungan' => now()->toDateString(),
+            'status_antrian' => 'menunggu',
+        ]);
+
+        return back();
+    }
+
+    public function editDarurat($no_registrasi)
+    {
+        $pendaftaran = Pendaftaran::with('pasien')
+            ->where('no_registrasi', $no_registrasi)
+            ->firstOrFail();
+
+        return Inertia::render('FormDaftar', [
+            'pendaftaranAwal' => $pendaftaran
+        ]);
+    }
+
+    public function updateDarurat(Request $request)
+    {
+        $pendaftaran = Pendaftaran::where(
+            'no_registrasi',
+            $request->no_registrasi
+        )->firstOrFail();
+
+        $pasien = Pasien::where(
+            'no_rm',
+            $pendaftaran->no_rm
+        )->firstOrFail();
+
+        $pasien->update([
+            'nama' => $request->nama,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'alamat' => $request->alamat,
+            'no_hp' => $request->no_hp,
+            'kelas_bpjs' => $request->kelas_bpjs,
+        ]);
+
+        $pendaftaran->update([
+            'keluhan_awal' => $request->keluhan_awal,
+        ]);
+
+        return redirect()
+            ->route('detail-pasien', $request->no_registrasi)
+            ->with('success', 'Data pasien berhasil dilengkapi');
+    }
 }

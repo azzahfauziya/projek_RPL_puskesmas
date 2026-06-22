@@ -31,7 +31,9 @@ import SideBar from '@/Components/SideBar.vue'
             : 'bg-red-500'
     })
 
-    const canInputData = computed(() => ['dokter', 'perawat'].includes(role.value))
+    const isDokterOrPerawat = computed(() =>
+        ['dokter', 'perawat'].includes(role.value)
+    )
 </script>
 
 <template>
@@ -114,29 +116,31 @@ import SideBar from '@/Components/SideBar.vue'
                         </div>
 
                         <!-- hanya muncul untuk dokter -->
-                        <div v-if="canInputData" class="flex gap-3 justify-end">
-                            <Link :href="route('form-tindakan', pendaftaran.no_registrasi)"
-                                class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition flex items-center justify-center">
-                                Input Tindakan
-                            </Link>
-                            <Link :href="route('form-resep', pendaftaran.no_registrasi)"
-                                class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition flex items-center justify-center">
-                                Input Resep Obat
-                            </Link>
-                            <Link :href="route('form-diagnosa', pendaftaran.no_registrasi)"
-                                class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition flex items-center justify-center">
-                                Input Diagnosa
-                            </Link>
-                            <Link :href="route('form-diagnosa', pendaftaran.no_registrasi)"
-                                class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition flex items-center justify-center">
-                                Edit Data
-                            </Link>
+                         <div>
+                            <div v-if="isDokterOrPerawat" class="flex gap-3 justify-end">
+                                <Link :href="route('form-tindakan', pendaftaran.no_registrasi)"
+                                    class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition flex items-center justify-center">
+                                    Input Tindakan
+                                </Link>
+                                <Link :href="route('form-resep', pendaftaran.no_registrasi)"
+                                    class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition flex items-center justify-center">
+                                    Input Resep Obat
+                                </Link>
+                                <Link :href="route('form-diagnosa', pendaftaran.no_registrasi)"
+                                    class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition flex items-center justify-center">
+                                    Input Diagnosa
+                                </Link>
+                            </div>
+                            <div v-if="role === 'administrasi' && pendaftaran.jenis_pendaftaran === 'darurat'" class="flex gap-3 justify-end">
+                                 <Link :href="route('pendaftaran.edit', pendaftaran.no_registrasi)"
+                                    class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition flex items-center justify-center">
+                                    Edit Data
+                                </Link>
+                            </div>
                         </div>
-
                     </div>
                 </div>
             </main>
         </div>
     </div>
-
 </template>

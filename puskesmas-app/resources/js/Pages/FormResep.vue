@@ -10,8 +10,6 @@ import { useForm } from '@inertiajs/vue3'
     const form = useForm({
         no_registrasi: props.pendaftaran.no_registrasi,
         id_obat: '',
-        dosis_obat: '',  
-        satuan_dosis: 'mg',
         aturan_pakai: '',
         jumlah: 1
     })
@@ -110,10 +108,10 @@ import { useForm } from '@inertiajs/vue3'
                     <!-- Keluhan Awal -->
                     <div class="grid grid-cols-[220px_1fr] items-center mb-4">
                         <label class="text-2xl font-medium">
-                            Dosis Obat
+                            Jumlah
                         </label>
 
-                        <input type="text" v-model="form.dosis_obat" class="border border-gray-500 rounded-lg h-12 px-4 bg-white w-full">
+                        <input type="number" v-model="form.jumlah" class="border border-gray-500 rounded-lg h-12 px-4 bg-white w-full">
                     </div>
 
                     <!-- Keluhan Awal -->

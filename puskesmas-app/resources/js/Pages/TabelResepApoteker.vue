@@ -107,7 +107,7 @@
                                     <th class="py-3 px-4 rounded-l-lg">No Registrasi</th>
                                     <th class="py-3 px-4 ">Nama Pasien</th>
                                     <th class="py-3 px-4 ">Nama Obat</th>
-                                    <th class="py-3 px-4 ">Dosis</th>
+                                    <th class="py-3 px-4 ">Jumlah</th>
                                     <th class="py-3 px-4 ">Aturan Pakai</th>
                                     <th class="py-3 px-4 rounded-r-lg">Status</th>
                                 </tr>
@@ -127,7 +127,7 @@
                                     </td>
 
                                     <td class="py-3 px-4">
-                                        {{ item.dosis }} {{ item.satuan_dosis }}
+                                        {{ item.jumlah }}
                                     </td>
 
                                     <td class="py-3 px-4">
