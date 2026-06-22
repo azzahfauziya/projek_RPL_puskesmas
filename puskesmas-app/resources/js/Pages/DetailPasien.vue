@@ -30,6 +30,8 @@ import SideBar from '@/Components/SideBar.vue'
             ? 'bg-green-600'
             : 'bg-red-500'
     })
+
+    const canInputData = computed(() => ['dokter', 'perawat'].includes(role.value))
 </script>
 
 <template>
@@ -112,7 +114,7 @@ import SideBar from '@/Components/SideBar.vue'
                         </div>
 
                         <!-- hanya muncul untuk dokter -->
-                        <div v-if="role === 'dokter'" class="flex gap-3 justify-end">
+                        <div v-if="canInputData" class="flex gap-3 justify-end">
                             <Link :href="route('form-tindakan', pendaftaran.no_registrasi)"
                                 class="w-64 h-16 bg-green-900 hover:bg-green-800 text-white font-semibold text-xl rounded-2xl transition flex items-center justify-center">
                                 Input Tindakan

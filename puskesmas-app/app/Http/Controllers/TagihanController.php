@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Pendaftaran;
@@ -12,6 +13,7 @@ class TagihanController extends Controller
             'pasien',
             'rekamMedis.tindakan.tindakan',
             'rekamMedis.resep.detailResep.obat',
+            'billing',
         ])->where('no_registrasi', $no_registrasi)->firstOrFail();
 
         $rekamMedis = $pendaftaran->rekamMedis;
@@ -31,13 +33,25 @@ class TagihanController extends Controller
             'nama_obat'  => $d->nama_obat_saat_resep,
             'jumlah'     => $d->jumlah,
             'harga'      => $d->obat?->harga_satuan,
-            'total_harga'=> ($d->obat?->harga_satuan ?? 0) * $d->jumlah,
+            'total_harga' => ($d->obat?->harga_satuan ?? 0) * $d->jumlah,
         ]) ?? collect();
 
+        $totalTindakan = $tindakan->sum('total_harga');
+        $totalObat     = $obat->sum('total_harga');
+        $totalKotor    = $totalTindakan + $totalObat;
+        $potongan      = $pendaftaran->pasien->kelas_bpjs ? round($totalKotor * 0.1) : 0;
+        $totalBayar    = $totalKotor - $potongan;
+
         return Inertia::render('Tagihan', [
-            'pendaftaran' => $pendaftaran,
-            'tindakan'    => $tindakan,
-            'obat'        => $obat,
+            'pendaftaran'   => $pendaftaran,
+            'tindakan'      => $tindakan,
+            'obat'          => $obat,
+            'totalTindakan' => $totalTindakan,
+            'totalObat'     => $totalObat,
+            'totalKotor'    => $totalKotor,
+            'potongan'      => $potongan,
+            'totalBayar'    => $totalBayar,
+            'sudahDibayar'  => $pendaftaran->billing?->jumlah_dibayarkan ?? 0,
         ]);
     }
 }

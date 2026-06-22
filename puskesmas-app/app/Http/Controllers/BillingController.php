@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Billing;
@@ -28,8 +29,8 @@ class BillingController extends Controller
 
         // Hitung total
         $totalTindakan = $rekamMedis?->tindakan->sum('total_harga') ?? 0;
-        $totalObat = $rekamMedis?->resep?->detailResep->sum(fn($d) =>
-            ($d->obat?->harga_satuan ?? 0) * $d->jumlah
+        $totalObat = $rekamMedis?->resep?->detailResep->sum(
+            fn($d) => ($d->obat?->harga_satuan ?? 0) * $d->jumlah
         ) ?? 0;
         $totalKotor = $totalTindakan + $totalObat;
 
@@ -37,7 +38,12 @@ class BillingController extends Controller
         $potongan = $pendaftaran->pasien->kelas_bpjs ? round($totalKotor * 0.1) : 0;
         $totalBayar = $totalKotor - $potongan;
 
-        $statusPembayaran = $request->jumlah_dibayarkan >= $totalBayar ? 'lunas' : 'belum_lunas';
+        // Tambah ini
+        if ($totalBayar <= 0) {
+            $statusPembayaran = 'lunas';
+        } else {
+            $statusPembayaran = $request->jumlah_dibayarkan >= $totalBayar ? 'lunas' : 'belum_lunas';
+        }
 
         // Cek apakah billing sudah ada
         $billing = Billing::where('no_registrasi', $request->no_registrasi)->first();
@@ -51,7 +57,7 @@ class BillingController extends Controller
                 'status_pembayaran'  => $statusPembayaran,
                 'waktu_bayar'        => Carbon::now(),
             ]);
-            } else {
+        } else {
             // Generate id_billing
             $id_billing = IdGenerator::generateIdBilling();
 
@@ -71,7 +77,7 @@ class BillingController extends Controller
             ]);
         }
 
-        return redirect()->route('kwitansi', $request->no_registrasi)
+        return redirect()->back()
             ->with('success', 'Pembayaran berhasil diproses.');
     }
 }

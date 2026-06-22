@@ -48,6 +48,13 @@ const menuPerRole = {
         { name: 'Data Obat', icon: ClipboardDocumentListIcon, href: '/obat-dokter' },
         { name: 'Data Resep', icon: ClipboardDocumentListIcon, href: '/resep' },
     ],
+    perawat: [
+        { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/perawat' },
+        { name: 'Daftar Antrian', icon: ClipboardDocumentListIcon, href: '/antrian' },
+        { name: 'Data Pasien', icon: UserGroupIcon, href: '/data-pasien' },
+        { name: 'Data Obat', icon: ClipboardDocumentListIcon, href: '/obat-perawat' },
+        { name: 'Data Resep', icon: ClipboardDocumentListIcon, href: '/resep' },
+    ],
     apoteker: [
         { name: 'Dashboard', icon: HomeIcon, href: '/dashboard/apoteker' },
         { name: 'Data Obat', icon: BeakerIcon, href: '/obat' },

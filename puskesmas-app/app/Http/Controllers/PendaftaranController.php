@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Pasien;
@@ -11,10 +12,16 @@ use Inertia\Inertia;
 
 class PendaftaranController extends Controller
 {
-        public function form()
+
+    public function form($no_rm = null)
     {
-        return Inertia::render('FormDaftar');
+        $pasien = $no_rm ? Pasien::where('no_rm', $no_rm)->first() : null;
+
+        return Inertia::render('FormDaftar', [
+            'pasienAwal' => $pasien,
+        ]);
     }
+
 
     public function cariPasien(Request $request)
     {
@@ -27,45 +34,45 @@ class PendaftaranController extends Controller
     }
 
     public function store(Request $request)
-{
-    $isNewPasien = !$request->is_existing;
+    {
+        $isNewPasien = !$request->is_existing;
 
-    $request->validate([
-        'keluhan_awal'      => 'required',
-        'tanggal_kunjungan' => 'required|date',
-        'alamat'            => 'required',
-        'nama'              => $isNewPasien ? 'required' : 'nullable',
-        'tanggal_lahir'     => $isNewPasien ? 'required|date' : 'nullable',
-        'jenis_kelamin'     => $isNewPasien ? 'required' : 'nullable',
-        'no_hp'             => $isNewPasien ? 'required' : 'nullable',
-        'kelas_bpjs'        => $isNewPasien ? 'required' : 'nullable',
-    ]);
-
-    if ($isNewPasien) {
-        $no_rm = IdGenerator::generateNoRm();
-        Pasien::create([
-            'no_rm'         => $no_rm,
-            'nama'          => $request->nama,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'jenis_kelamin' => $request->jenis_kelamin,
-            'alamat'        => $request->alamat,
-            'no_hp'         => $request->no_hp,
-            'kelas_bpjs'    => $request->kelas_bpjs,
+        $request->validate([
+            'keluhan_awal'      => 'required',
+            'tanggal_kunjungan' => 'required|date',
+            'alamat'            => 'required',
+            'nama'              => $isNewPasien ? 'required' : 'nullable',
+            'tanggal_lahir'     => $isNewPasien ? 'required|date' : 'nullable',
+            'jenis_kelamin'     => $isNewPasien ? 'required' : 'nullable',
+            'no_hp'             => $isNewPasien ? 'required' : 'nullable',
+            'kelas_bpjs'        => $isNewPasien ? 'required' : 'nullable',
         ]);
-    } else {
-        $no_rm = $request->no_rm;
-        Pasien::where('no_rm', $no_rm)->update(['alamat' => $request->alamat]);
+
+        if ($isNewPasien) {
+            $no_rm = IdGenerator::generateNoRm();
+            Pasien::create([
+                'no_rm'         => $no_rm,
+                'nama'          => $request->nama,
+                'tanggal_lahir' => $request->tanggal_lahir,
+                'jenis_kelamin' => $request->jenis_kelamin,
+                'alamat'        => $request->alamat,
+                'no_hp'         => $request->no_hp,
+                'kelas_bpjs'    => $request->kelas_bpjs,
+            ]);
+        } else {
+            $no_rm = $request->no_rm;
+            Pasien::where('no_rm', $no_rm)->update(['alamat' => $request->alamat]);
+        }
+
+        Pendaftaran::create([
+            'no_registrasi'     => IdGenerator::generateNoRegistrasi(),
+            'no_rm'             => $no_rm,
+            'id_administrasi'   => Auth::user()->administrasi->id_administrasi,
+            'keluhan_awal'      => $request->keluhan_awal,
+            'tanggal_kunjungan' => $request->tanggal_kunjungan,
+            'status_antrian'    => 'menunggu',
+        ]);
+
+        return redirect()->route('pendaftaran.form')->with('success', 'Pendaftaran berhasil.');
     }
-
-    Pendaftaran::create([
-        'no_registrasi'     => IdGenerator::generateNoRegistrasi(),
-        'no_rm'             => $no_rm,
-        'id_administrasi'   => Auth::user()->administrasi->id_administrasi,
-        'keluhan_awal'      => $request->keluhan_awal,
-        'tanggal_kunjungan' => $request->tanggal_kunjungan,
-        'status_antrian'    => 'menunggu',
-    ]);
-
-    return redirect()->route('pendaftaran.form')->with('success', 'Pendaftaran berhasil.');
-}
 }

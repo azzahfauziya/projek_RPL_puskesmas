@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useForm, router } from '@inertiajs/vue3'
 import axios from 'axios'
 import NavBar from '@/Components/NavBar.vue'
@@ -8,15 +8,28 @@ import { usePage } from '@inertiajs/vue3'
 
 const page = usePage()
 const showSuccess = computed(() => !!page.props.flash?.success)
-// const props = defineProps({
-//     dokter: Array,
-// })
 const sidebarOpen = ref(false)
 const searchQuery = ref('')
 const searchResults = ref([])
 const searchNotFound = ref(false)
 const selectedPasien = ref(null)
 const isExisting = computed(() => selectedPasien.value !== null)
+
+
+const props = defineProps({
+    pasienAwal: { type: Object, default: null }
+})
+
+onMounted(() => {
+    if (props.pasienAwal) {
+        pilihPasien(props.pasienAwal)
+    }
+})
+
+const today = new Date()
+const offset = today.getTimezoneOffset() * 60000
+const localToday = new Date(today - offset).toISOString().split('T')[0]
+
 
 const form = useForm({
     is_existing: false,
@@ -29,7 +42,7 @@ const form = useForm({
     kelas_bpjs: '',
     // id_dokter:          '',
     keluhan_awal: '',
-    tanggal_kunjungan: new Date().toISOString().split('T')[0],
+    tanggal_kunjungan: localToday,
 })
 
 watch(searchQuery, async (val) => {
@@ -180,9 +193,9 @@ function submit() {
                                     :class="isExisting ? 'bg-gray-100 text-gray-500' : 'bg-white'"
                                     class="h-12 border border-gray-500 rounded-lg px-4 w-full">
                                     <option value="">-- Pilih Kelas BPJS --</option>
-                                    <option value="Kelas 1">Kelas 1</option>
-                                    <option value="Kelas 2">Kelas 2</option>
-                                    <option value="Kelas 3">Kelas 3</option>
+                                    <option value="1">Kelas 1</option>
+                                    <option value="2">Kelas 2</option>
+                                    <option value="3">Kelas 3</option>
                                     <option value="Umum">Umum</option>
                                 </select>
                             </div>

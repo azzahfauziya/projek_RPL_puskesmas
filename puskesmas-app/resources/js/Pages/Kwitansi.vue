@@ -17,8 +17,9 @@ const props = defineProps({
 })
 
 const page = usePage()
-const showSuccess = computed(() => !!page.props.flash?.success)
+const showSuccess = ref(false)
 const sidebarOpen = ref(false)
+const sudahProses = ref(false)
 
 const form = useForm({
     no_registrasi: props.pendaftaran.no_registrasi,
@@ -26,39 +27,41 @@ const form = useForm({
     jumlah_dibayarkan: '',
 })
 
-function submit() {
-    form.post(route('billing.store'), {
-        onSuccess: () => {
-            sudahProses.value = true
-        }
-    })
-}
 
-const sudahProses = ref(false)
 const formatRupiah = (angka) => {
     return new Intl.NumberFormat('id-ID', {
         style: 'currency', currency: 'IDR', minimumFractionDigits: 0
     }).format(angka ?? 0)
 }
 
-
+// statusLunas HANYA berubah setelah tombol diklik (sudahProses),
+// bukan saat user ngetik nominal
 const statusLunas = computed(() => {
-    if (!sudahProses.value) return false
-    const dibayar = Number(form.jumlah_dibayarkan) || 0
-    const total = Number(props.totalBayar) || 0
+    if (sudahProses.value) return true
     const sudah = Number(props.sudahDibayar) || 0
-    return (sudah + dibayar) >= total
+    const total = Number(props.totalBayar) || 0
+    return sudah >= total
+})
+
+// Preview kekurangan saja (tidak affect statusLunas)
+const kekurangan = computed(() => {
+    const dibayar = Number(form.jumlah_dibayarkan) || 0
+    const sisa = sisaTagihan.value - dibayar
+    return sisa > 0 ? sisa : 0
 })
 
 const sisaTagihan = computed(() => {
     return Number(props.totalBayar) - Number(props.sudahDibayar)
 })
 
-const kekurangan = computed(() => {
-    const dibayar = Number(form.jumlah_dibayarkan) || 0
-    const sisa = sisaTagihan.value - dibayar
-    return sisa > 0 ? sisa : 0
-})
+function submit() {
+    form.post(route('billing.store'), {
+        onSuccess: () => {
+            sudahProses.value = true
+            showSuccess.value = true   // trigger popup manual
+        }
+    })
+}
 </script>
 
 <template>
@@ -255,10 +258,9 @@ const kekurangan = computed(() => {
                             <select v-model="form.metode_pembayaran"
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                 <option value="" disabled>Pilih metode pembayaran</option>
-                                <option value="Tunai">Tunai</option>
-                                <option value="Debit">Debit</option>
-                                <option value="Kredit">Kredit</option>
-                                <option value="QRIS">QRIS</option>
+                                <option value="tunai">Tunai</option>
+                                <option value="bpjs">BPJS</option>
+                                <option value="transfer">Transfer</option>
                             </select>
                         </div>
 

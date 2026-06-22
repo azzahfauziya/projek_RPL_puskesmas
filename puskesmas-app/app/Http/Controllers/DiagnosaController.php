@@ -16,7 +16,8 @@ class DiagnosaController extends Controller
             ->findOrFail($no_registrasi);
 
         return inertia('FormDiagnosa', [
-            'pendaftaran' => $pendaftaran
+            'pendaftaran' => $pendaftaran,
+            'dokters' => \App\Models\Dokter::all(),
         ]);
     }
 
@@ -35,6 +36,7 @@ class DiagnosaController extends Controller
         
         $request->validate([
             'no_registrasi' => 'required',
+            'id_dokter' => 'required', 
             'tinggi_badan' => 'required|numeric',
             'berat_badan' => 'required|numeric',
             'tensi' => 'required',
@@ -50,7 +52,7 @@ class DiagnosaController extends Controller
         RekamMedis::create([
             'id_rekam_medis' => $id,
             'no_registrasi' => $request->no_registrasi,
-            'id_dokter' => auth()->user()->dokter->id_dokter,
+            'id_dokter' => $request->id_dokter,
             'diagnosa' => $request->diagnosa,
             'tinggi_badan' => $request->tinggi_badan,
             'berat_badan' => $request->berat_badan,

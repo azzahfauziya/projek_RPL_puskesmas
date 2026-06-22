@@ -38,6 +38,18 @@ class AkunSeeder extends Seeder
             'alamat'       => 'Jl. Sehat No. 2',
         ]);
 
+        // Profil dokter
+        DB::table('perawat')->insert([
+            'perawat'    => 'DKT-001',
+            'id_akun'      => 'AKN-002',
+            'nip'          => '198501012010011002',
+            'nama'         => 'Ns. Azzah Fauziya',
+            'spesialisasi' => 'Dokter Umum',
+            'no_str'       => 'STR-2025-001',
+            'no_hp'        => '081234567891',
+            'alamat'       => 'Jl. Sehat No. 2',
+        ]);
+
         // Profil apoteker
         DB::table('apoteker')->insert([
             'id_apoteker' => 'APT-001',

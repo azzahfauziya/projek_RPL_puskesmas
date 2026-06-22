@@ -10,7 +10,7 @@ import { useForm } from '@inertiajs/vue3'
     const form = useForm({
         no_registrasi: props.pendaftaran.no_registrasi,
         id_obat: '',
-        dosis: '',
+        dosis_obat: '',  
         satuan_dosis: 'mg',
         aturan_pakai: '',
         jumlah: 1

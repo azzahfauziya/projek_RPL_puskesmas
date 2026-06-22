@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -19,36 +20,49 @@ class ResepController extends Controller
             'pasien',
             'rekamMedis'
         ])
-        ->where('no_registrasi', $no_registrasi)
-        ->firstOrFail();
+            ->where('no_registrasi', $no_registrasi)
+            ->firstOrFail();
 
         return Inertia::render('FormResep', [
             'pendaftaran' => $pendaftaran,
             'obat' =>  \App\Models\Obat::orderBy('nama_obat')->get()
         ]);
     }
-
     public function simpan(Request $request)
     {
         $pendaftaran = Pendaftaran::with('rekamMedis')
             ->where('no_registrasi', $request->no_registrasi)
             ->firstOrFail();
 
-        Resep::create([
-            'id_resep' => 'RSP-' . now()->format('ymdHis'),
-            'id_rekam_medis' => $pendaftaran->rekamMedis->id_rekam_medis,
-            'id_dokter' => Auth::user()->id_dokter,
-            'nama_obat' => $request->nama_obat,
-            'dosis_obat' => $request->dosis_obat,
-            'aturan_pakai' => $request->aturan_pakai,
-            'status' => 'menunggu',
-            'waktu_dibuat' => now(),
+        $rekamMedis = $pendaftaran->rekamMedis;
+
+        // Buat atau ambil resep yang sudah ada untuk rekam medis ini
+        $resep = Resep::firstOrCreate(
+            ['id_rekam_medis' => $rekamMedis->id_rekam_medis],
+            [
+                'id_resep'    => 'RSP-' . now()->format('ymdHi'),
+                'id_dokter'   => $rekamMedis->id_dokter,
+                'status'      => 'menunggu',
+                'waktu_dibuat' => now(),
+            ]
+        );
+
+        $obat = \App\Models\Obat::findOrFail($request->id_obat);
+
+        $jumlahDetail = DetailResep::count() + 1;
+
+        DetailResep::create([
+            'id_detail'            => 'DTL-' . str_pad($jumlahDetail, 3, '0', STR_PAD_LEFT),
+            'id_resep'             => $resep->id_resep,
+            'id_obat'              => $request->id_obat,
+            'nama_obat_saat_resep' => $obat->nama_obat,
+            'dosis'                => $request->dosis_obat,
+            'satuan_dosis'         => 'mg',
+            'aturan_pakai'         => $request->aturan_pakai,
+            'jumlah'               => $request->jumlah ?? 1,
         ]);
 
-        return redirect()->route(
-            'detail-pasien',
-            $request->no_registrasi
-        );
+        return redirect()->route('detail-pasien', $request->no_registrasi);
     }
 
     public function tabelResep()
@@ -63,15 +77,15 @@ class ResepController extends Controller
     }
 
     public function tabelResepApoteker()
-{
-    $resepApoteker = DetailResep::with([
-        'resep.rekamMedis.pendaftaran.pasien'
-    ])->get();
+    {
+        $resepApoteker = DetailResep::with([
+            'resep.rekamMedis.pendaftaran.pasien'
+        ])->get();
 
-    return Inertia::render('TabelResepApoteker', [
-        'resepApoteker' => $resepApoteker
-    ]);
-}
+        return Inertia::render('TabelResepApoteker', [
+            'resepApoteker' => $resepApoteker
+        ]);
+    }
 
     public function updateStatus(Request $request, $id_resep)
     {
@@ -82,6 +96,4 @@ class ResepController extends Controller
 
         return back();
     }
-
-
 }

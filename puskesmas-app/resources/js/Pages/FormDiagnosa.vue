@@ -3,7 +3,8 @@ import { useForm } from '@inertiajs/vue3'
 import { computed } from 'vue'
 
     const props = defineProps({
-        pendaftaran: Object
+        pendaftaran: Object,
+        dokters: Array
     })
 
     const tanggalHariIni = computed(() => {
@@ -17,6 +18,7 @@ import { computed } from 'vue'
 
     const form = useForm({
         no_registrasi: props.pendaftaran.no_registrasi,
+        id_dokter: '',
         tinggi_badan: '',
         berat_badan: '',
         tensi: '',
@@ -104,6 +106,7 @@ import { computed } from 'vue'
         
                     <!-- Form -->
                     <div class="max-w-4xl">
+                        
                         <div class="grid grid-cols-2 gap-6 mb-4">
 
                             <div>
@@ -162,8 +165,23 @@ import { computed } from 'vue'
                             </div>
 
                         </div>
-                        <!-- Diagnosa -->
+                        
                         <div class="grid grid-cols-[220px_1fr] items-center mb-4">
+                            
+                            <label class="text-2xl font-medium">
+                                Dokter
+                            </label>
+        
+                            <select v-model="form.id_dokter" class="border border-gray-500 rounded-lg p-4 bg-white w-full resize-none">
+                            <option v-for="dokter in dokters" :key="dokter.id_dokter" :value="dokter.id_dokter">
+                                {{ dokter.nama }}
+                            </option>
+                        </select>
+                        </div>
+                        <!-- Diagnosa -->
+
+                        <div class="grid grid-cols-[220px_1fr] items-center mb-4">
+                            
                             <label class="text-2xl font-medium">
                                 Diagnosa
                             </label>

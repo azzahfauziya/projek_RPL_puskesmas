@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Pasien;
@@ -39,13 +40,31 @@ class DashboardController extends Controller
             ->get();
 
         return Inertia::render('Dashboard/Administrasi', [
-            'totalAntrian'   => $antrian->count(),
-            'sudahDiperiksa' => $antrian->where('status_antrian', 'diperiksa')->count(),
-            'antrian'        => $antrian,
+            'totalAntrian'       => $antrian->count(),
+            'sudahDiperiksa'     => $antrian->where('status_antrian', 'diperiksa')->count(),
+            'antrian'            => $antrian,
+            'pendaftaranHariIni' => Pendaftaran::whereDate('tanggal_kunjungan', today())->count(),
         ]);
     }
 
-    // Dashboard apoteker — tampilkan resep masuk + info stok
+    public function perawat()
+    {
+        $perawat = Auth::user()->perawat;
+
+        $antrian = Pendaftaran::with(['pasien'])
+            ->where('id_dokter', $perawat->id_perawat)
+            ->whereDate('tanggal_kunjungan', today())
+            ->orderBy('no_registrasi')
+            ->get();
+
+        return Inertia::render('Dashboard/Administrasi', [
+            'totalAntrian'       => $antrian->count(),
+            'sudahDiperiksa'     => $antrian->where('status_antrian', 'diperiksa')->count(),
+            'antrian'            => $antrian,
+            'pendaftaranHariIni' => Pendaftaran::whereDate('tanggal_kunjungan', today())->count(),
+        ]);
+    }
+
     public function apoteker()
     {
         $resepTerbaru = Resep::with(['dokter', 'rekamMedis.pendaftaran.pasien'])
@@ -55,10 +74,11 @@ class DashboardController extends Controller
             ->get();
 
         return Inertia::render('Dashboard/Administrasi', [
-            'totalObat'     => Obat::count(),
-            'resepMenunggu' => Resep::where('status', 'menunggu')->count(),
-            'obatMenipis'   => Obat::where('stok', '<', 10)->count(),
-            'resepTerbaru'  => $resepTerbaru,
+            'totalObat'          => Obat::count(),
+            'resepMenunggu'      => Resep::where('status', 'menunggu')->count(),
+            'obatMenipis'        => Obat::where('stok', '<', 10)->count(),
+            'resepTerbaru'       => $resepTerbaru,
+            'pendaftaranHariIni' => Pendaftaran::whereDate('tanggal_kunjungan', today())->count(),
         ]);
     }
 }

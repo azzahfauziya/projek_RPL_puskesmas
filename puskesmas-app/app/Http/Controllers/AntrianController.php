@@ -13,8 +13,9 @@ class AntrianController extends Controller
         $antrian = Pendaftaran::with('pasien')
             //->whereDate('tanggal_kunjungan', today())
             // ->orderBy('tanggal_kunjungan', 'asc')
-            // ->whereDate('tanggal_kunjungan', today())
-            ->orderByRaw("CASE WHEN status_antrian = 'selesai' THEN 1 ELSE 0 END ASC")
+            ->whereDate('tanggal_kunjungan', today())
+            ->where('status_antrian', '!=', 'selesai')
+            // ->orderByRaw("CASE WHEN status_antrian = 'selesai' THEN 1 ELSE 0 END ASC")
             ->orderBy('no_registrasi', 'asc')
             ->get();
 
