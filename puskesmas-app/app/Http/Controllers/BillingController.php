@@ -35,7 +35,7 @@ class BillingController extends Controller
         $totalKotor = $totalTindakan + $totalObat;
 
         // Potongan BPJS — 10% kalau punya kelas BPJS
-        $potongan = $pendaftaran->pasien->kelas_bpjs ? round($totalKotor * 0.1) : 0;
+        $potongan = $request->potongan_bpjs ?? 0;
         $totalBayar = $totalKotor - $potongan;
 
         // Tambah ini

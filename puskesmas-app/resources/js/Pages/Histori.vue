@@ -90,7 +90,7 @@ const formatTanggal = (tgl) => {
                                 <div class="flex mb-6">
                                     <span class="font-bold w-40">TB / BB</span>
                                     <span class="mr-4">:</span>
-                                    <span>{{ pasien.tinggi_badan ?? '-' }} cm / {{ pasien.berat_badan ?? '-' }} kg</span>
+                                    <span>{{ current.tinggi_badan ?? '-' }} cm / {{ current.berat_badan ?? '-' }} kg</span>
                                 </div>
                                 <div class="flex">
                                     <span class="font-bold w-40">Kelas BPJS</span>

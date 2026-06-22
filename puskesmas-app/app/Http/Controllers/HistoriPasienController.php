@@ -11,18 +11,21 @@ class HistoriPasienController extends Controller
     {
         $pasien = Pasien::where('no_rm', $no_rm)->firstOrFail();
 
-        $kunjungan = Pendaftaran::with([
+        $pendaftaran = Pendaftaran::with([
             'rekamMedis.tindakan.tindakan',
             'rekamMedis.resep.detailResep.obat',
         ])
             ->where('no_rm', $pasien->no_rm)
             ->orderBy('tanggal_kunjungan', 'desc')
-            ->get()
-            ->map(fn($p) => [
+            ->get();
+
+        $kunjungan = $pendaftaran->map(fn($p) => [
             'no_registrasi'     => $p->no_registrasi,
             'tanggal_kunjungan' => $p->tanggal_kunjungan,
             'keluhan'           => $p->rekamMedis?->keluhan,
             'diagnosa'          => $p->rekamMedis?->diagnosa,
+            'tinggi_badan'      => $p->rekamMedis?->tinggi_badan,
+            'berat_badan'       => $p->rekamMedis?->berat_badan,
             'tindakan'          => $p->rekamMedis?->tindakan->map(fn($t) => [
                 'id_tindakan'   => $t->id_tindakan,
                 'nama_tindakan' => $t->tindakan?->nama_tindakan,

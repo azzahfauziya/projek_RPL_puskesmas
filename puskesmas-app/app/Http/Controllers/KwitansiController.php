@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Pendaftaran;
@@ -33,11 +34,16 @@ class KwitansiController extends Controller
             'total_harga' => ($d->obat?->harga_satuan ?? 0) * $d->jumlah,
         ]) ?? collect();
 
-        $totalTindakan = $tindakan->sum('total_harga');
-        $totalObat     = $obat->sum('total_harga');
-        $totalKotor    = $totalTindakan + $totalObat;
-        $potongan      = $pendaftaran->billing?->potongan_bpjs ?? 0;
-        $totalBayar    = $pendaftaran->billing?->total_bayar ?? ($totalKotor - $potongan);
+        $billing = $pendaftaran->billing;
+
+        // Ambil dari billing kalau sudah ada, fallback hitung ulang
+        $totalTindakan = $billing?->total_tindakan ?? $tindakan->sum('total_harga');
+        $totalObat     = $billing?->total_obat     ?? $obat->sum('total_harga');
+        $totalKotor    = $billing?->total_kotor    ?? ($totalTindakan + $totalObat);
+        $potongan      = $billing?->potongan_bpjs  ?? 0;
+        $totalBayar    = $billing?->total_bayar    ?? ($totalKotor - $potongan);
+        $sudahDibayar  = $billing?->jumlah_dibayarkan ?? 0;
+        $sisaTagihan   = max(0, $totalBayar - $sudahDibayar);
 
         return Inertia::render('Kwitansi', [
             'pendaftaran'   => $pendaftaran,
@@ -48,7 +54,11 @@ class KwitansiController extends Controller
             'totalKotor'    => $totalKotor,
             'potongan'      => $potongan,
             'totalBayar'    => $totalBayar,
-            'sudahDibayar'  => $pendaftaran->billing?->jumlah_dibayarkan ?? 0,
+            'sudahDibayar'  => $sudahDibayar,
+            'sisaTagihan'   => $sisaTagihan,
+            'statusPembayaran' => $billing?->status_pembayaran ?? 'belum_lunas',
+            'metodePembayaran' => $billing?->metode_pembayaran ?? '-',
+            'waktuBayar'    => $billing?->waktu_bayar?->format('d/m/Y H:i') ?? '-',
         ]);
     }
 }
