@@ -192,8 +192,10 @@ const formatTanggal = (tgl) => {
                         </div>
 
                         <div class="flex mt-4 p-4">
-                            <button @click="router.visit(route('kwitansi', { no_registrasi: current.no_registrasi }))"
-                                class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-6 py-3 rounded-lg shadow-md flex items-center gap-2">
+                            <button @click="router.visit(route('kwitansi', {
+                                no_registrasi: current.no_registrasi,
+                                from: 'histori'
+                            }))" class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-6 py-3 rounded-lg shadow-md flex items-center gap-2">
                                 Lihat Kwitansi
                             </button>
                         </div>

@@ -35,7 +35,16 @@ class BillingController extends Controller
         $totalKotor = $totalTindakan + $totalObat;
 
         // Potongan BPJS — 10% kalau punya kelas BPJS
-        $potongan = $request->potongan_bpjs ?? 0;
+        $kelasBpjs = $pendaftaran->pasien->kelas_bpjs;
+
+        $persen = match ($kelasBpjs) {
+            '1' => 0.20,
+            '2' => 0.15,
+            '3' => 0.10,
+            default => 0
+        };
+
+        $potongan = $totalKotor * $persen;
         $totalBayar = $totalKotor - $potongan;
 
         // Tambah ini
@@ -77,7 +86,9 @@ class BillingController extends Controller
             ]);
         }
 
-        return redirect()->back()
-            ->with('success', 'Pembayaran berhasil diproses.');
+       return redirect()->route(
+            'kwitansi',
+            $request->no_registrasi
+        );
     }
 }

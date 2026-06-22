@@ -34,8 +34,13 @@ const formatRupiah = (angka) => {
 
 // Hitung potongan di frontend berdasarkan metode & kelas BPJS
 const potonganPreview = computed(() => {
-    if (form.metode_pembayaran !== 'bpjs') return 0
-    const persen = { '1': 0.20, '2': 0.15, '3': 0.10 }[props.kelasBpjs] ?? 0
+
+    const persen = {
+        '1': 0.20,
+        '2': 0.15,
+        '3': 0.10
+    }[props.kelasBpjs] ?? 0
+
     return Math.round(props.totalKotor * persen)
 })
 
@@ -233,7 +238,6 @@ function submit() {
                                 class="w-full rounded-xl border border-gray-300 px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                 <option value="" disabled>Pilih metode pembayaran</option>
                                 <option value="tunai">Tunai</option>
-                                <option value="bpjs" :disabled="!kelasBpjs">BPJS {{ !kelasBpjs ? '(pasien tidak punya BPJS)' : '' }}</option>
                                 <option value="transfer">Transfer</option>
                             </select>
                             <div v-if="form.metode_pembayaran === 'bpjs' && potonganPreview > 0" class="mt-3 text-sm text-emerald-700 font-semibold">

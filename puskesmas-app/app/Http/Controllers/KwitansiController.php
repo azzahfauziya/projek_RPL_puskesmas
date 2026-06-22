@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Http\Request;
 
 use App\Models\Pendaftaran;
 use Inertia\Inertia;
 
 class KwitansiController extends Controller
 {
-    public function show($no_registrasi)
+    public function show(Request $request, $no_registrasi)
     {
         $pendaftaran = Pendaftaran::with([
             'pasien',
@@ -43,6 +44,10 @@ class KwitansiController extends Controller
         $potongan      = $billing?->potongan_bpjs  ?? 0;
         $totalBayar    = $billing?->total_bayar    ?? ($totalKotor - $potongan);
         $sudahDibayar  = $billing?->jumlah_dibayarkan ?? 0;
+        $kembalian = max(
+            0,
+            $sudahDibayar - $totalBayar
+        );
         $sisaTagihan   = max(0, $totalBayar - $sudahDibayar);
 
         return Inertia::render('Kwitansi', [
@@ -55,10 +60,12 @@ class KwitansiController extends Controller
             'potongan'      => $potongan,
             'totalBayar'    => $totalBayar,
             'sudahDibayar'  => $sudahDibayar,
+            'kembalian'     => $kembalian,
             'sisaTagihan'   => $sisaTagihan,
             'statusPembayaran' => $billing?->status_pembayaran ?? 'belum_lunas',
             'metodePembayaran' => $billing?->metode_pembayaran ?? '-',
             'waktuBayar'    => $billing?->waktu_bayar?->format('d/m/Y H:i') ?? '-',
+            'from'          => $request->from
         ]);
     }
 }

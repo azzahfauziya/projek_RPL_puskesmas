@@ -8,12 +8,14 @@ const props = defineProps({
     pendaftaran: Object,
     tindakan: Array,
     obat: Array,
+    from: String,
     totalTindakan: { type: Number, default: 0 },
     totalObat: { type: Number, default: 0 },
     totalKotor: { type: Number, default: 0 },
     potongan: { type: Number, default: 0 },
     totalBayar: { type: Number, default: 0 },
     sudahDibayar: { type: Number, default: 0 },
+    kembalian: {type: Number, default: 0},
     sisaTagihan: { type: Number, default: 0 },
     statusPembayaran: { type: String, default: 'belum_lunas' },
     metodePembayaran: { type: String, default: '-' },
@@ -29,6 +31,26 @@ const formatRupiah = (angka) => {
 }
 
 const isLunas = props.statusPembayaran === 'lunas'
+
+function kembali() {
+
+    if (props.from === 'histori') {
+
+        router.visit(
+            route(
+                'histori-pasien',
+                props.pendaftaran.pasien.no_rm
+            )
+        )
+
+        return
+    }
+
+    router.visit(
+        route('kunjungan')
+    )
+}
+
 </script>
 
 <template>
@@ -184,6 +206,9 @@ const isLunas = props.statusPembayaran === 'lunas'
                             <span class="font-semibold text-left">Sudah Dibayar</span>
                             <span class="text-emerald-700 font-semibold">{{ formatRupiah(sudahDibayar) }}</span>
 
+                            <span class="font-semibold text-left">Kembalian</span>
+                            <span>{{ formatRupiah(kembalian) }}</span>
+
                             <span class="font-semibold text-left">Sisa Tagihan</span>
                             <span :class="sisaTagihan > 0 ? 'text-red-600 font-semibold' : 'text-emerald-700 font-semibold'">
                                 {{ sisaTagihan > 0 ? formatRupiah(sisaTagihan) : 'Lunas' }}
@@ -216,9 +241,9 @@ const isLunas = props.statusPembayaran === 'lunas'
 
                     <!-- Tombol Kembali -->
                     <div class="flex justify-end mt-6">
-                        <button @click="router.visit(route('tagihan', { no_registrasi: pendaftaran.no_registrasi }))"
-                            class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-8 py-3 rounded-lg shadow-md">
-                            Kembali ke Tagihan
+                        <button @click="kembali"
+                            class="bg-emerald-700 hover:bg-emerald-800 text-white px-6 py-3 rounded-lg">
+                            Kembali
                         </button>
                     </div>
 

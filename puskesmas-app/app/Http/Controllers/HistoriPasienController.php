@@ -22,7 +22,7 @@ class HistoriPasienController extends Controller
         $kunjungan = $pendaftaran->map(fn($p) => [
             'no_registrasi'     => $p->no_registrasi,
             'tanggal_kunjungan' => $p->tanggal_kunjungan,
-            'keluhan'           => $p->rekamMedis?->keluhan,
+            'keluhan'           => $p->keluhan_awal,
             'diagnosa'          => $p->rekamMedis?->diagnosa,
             'tinggi_badan'      => $p->rekamMedis?->tinggi_badan,
             'berat_badan'       => $p->rekamMedis?->berat_badan,

@@ -150,7 +150,7 @@ function kembaliKeDetail() {
                             </div>
 
                             <div class="flex justify-end">
-                                <button type="button" @click="kembaliKeDetail"
+                                <button type="button" @click="submit"
                                     class="bg-green-900 hover:bg-green-800 text-white font-semibold text-xl px-16 py-3 rounded-xl">
                                     Kirim
                                 </button>
@@ -169,7 +169,7 @@ function kembaliKeDetail() {
                             </svg>
                         </div>
                         <h2 class="text-xl font-bold text-gray-800">Tindakan Berhasil Disimpan!</h2>
-                        <button @click="submit"
+                        <button @click="kembaliKeDetail"
                             class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-6 py-2 rounded-lg w-full">
                             OK
                         </button>

@@ -28,7 +28,7 @@ class PendaftaranController extends Controller
         $pasien = Pasien::where('no_rm', 'like', '%' . $request->q . '%')
             ->orWhere('nama', 'like', '%' . $request->q . '%')
             ->select('no_rm', 'nama')
-            ->limit(5)
+            // ->limit(5)
             ->get();
         return response()->json($pasien);
     }

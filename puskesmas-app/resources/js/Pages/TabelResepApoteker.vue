@@ -21,19 +21,45 @@
     const perPage = 10
 
     const resepFilter = computed(() => {
-        if (!search.value) return props.resepApoteker
+        let data = [...props.resepApoteker]
 
-        const keyword = search.value.toLowerCase()
+        if (search.value) {
+            const keyword = search.value.toLowerCase()
 
-        return props.resepApoteker.filter(item => {
-            const nama =
-                item.resep?.rekam_medis?.pendaftaran?.pasien?.nama?.toLowerCase() || ''
+            data = data.filter(item => {
+                const nama =
+                    item.resep?.rekam_medis?.pendaftaran?.pasien?.nama?.toLowerCase() || ''
 
-            const noReg =
-                item.resep?.rekam_medis?.pendaftaran?.no_registrasi?.toLowerCase() || ''
+                const noReg =
+                    item.resep?.rekam_medis?.pendaftaran?.no_registrasi?.toLowerCase() || ''
 
-            return nama.includes(keyword) || noReg.includes(keyword)
+                return nama.includes(keyword) || noReg.includes(keyword)
+            })
+        }
+
+        data.sort((a, b) => {
+
+            // proses selalu di atas
+            if (
+                a.resep?.status === 'proses' &&
+                b.resep?.status === 'selesai'
+            ) {
+                return -1
+            }
+
+            if (
+                a.resep?.status === 'selesai' &&
+                b.resep?.status === 'proses'
+            ) {
+                return 1
+            }
+
+            // terbaru di atas
+            return new Date(b.resep?.created_at) -
+                new Date(a.resep?.created_at)
         })
+
+        return data
     })
 
     const totalHalaman = computed(() =>

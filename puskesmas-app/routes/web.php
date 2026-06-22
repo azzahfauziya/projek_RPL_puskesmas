@@ -39,6 +39,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/histori-pasien/{no_rm}', [HistoriPasienController::class, 'show'])->name('histori-pasien');
         Route::post('/pasien-darurat', [PendaftaranController::class, 'storeDarurat'])->name('pasien-darurat.store');
         Route::get('/kwitansi/{no_registrasi}', [KwitansiController::class, 'show'])->name('kwitansi');
+        Route::get('/kwitansi/{no_registrasi}',[KwitansiController::class, 'show'])->name('kwitansi');
     });
 
     // Administrasi

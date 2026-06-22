@@ -160,7 +160,7 @@ function submit() {
                                         placeholder="Ketik No. RM untuk cari pasien lama, kosongkan jika pasien baru..."
                                         class="h-12 border border-gray-500 rounded-lg px-4 w-full bg-white" />
                                     <div v-if="searchResults.length > 0"
-                                        class="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg mt-1">
+                                        class="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg mt-1 max-h-64 overflow-y-auto">
                                         <div v-for="p in searchResults" :key="p.no_rm" @click="pilihPasien(p)"
                                             class="px-4 py-3 hover:bg-emerald-50 cursor-pointer flex justify-between">
                                             <span class="font-medium">{{ p.no_rm }}</span>

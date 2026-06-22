@@ -77,10 +77,6 @@ const totalPages = computed(() => Math.ceil(filtered.value.length / perPage))
                                     <td class="py-3 px-4 font-medium">{{ item.nama }}</td>
                                     <td class="py-3 items-center justify-center text-center">
                                         <div class="flex items-center justify-center gap-2">
-                                            <button @click="router.visit(route('pendaftaran.form', item.no_rm))"
-                                                class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-4 py-1 rounded-lg shadow-md">
-                                                Daftar
-                                            </button>
                                             <button @click="router.visit(route('histori-pasien', item.no_rm))"
                                                 class="bg-slate-600 hover:bg-slate-500 text-white font-semibold px-4 py-1 rounded-lg shadow-md">
                                                 Riwayat

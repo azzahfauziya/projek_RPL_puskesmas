@@ -37,10 +37,19 @@ class TagihanController extends Controller
         $totalTindakan = $tindakan->sum('total_harga');
         $totalObat     = $obat->sum('total_harga');
         $totalKotor    = $totalTindakan + $totalObat;
+        $kelasBpjs = $pendaftaran->pasien->kelas_bpjs;
 
+        $potonganPersen = match ($kelasBpjs) {
+            '1' => 0.20,
+            '2' => 0.15,
+            '3' => 0.10,
+            default => 0,
+        };
+
+        $potongan = $totalKotor * $potonganPersen;
+        $totalBayar = $totalKotor - $potongan;
         // Potongan belum diketahui (tergantung metode bayar), kirim 0
         // Potongan asli baru dihitung saat BillingController::store
-        $totalBayar = $totalKotor;
 
         return Inertia::render('Tagihan', [
             'pendaftaran'   => $pendaftaran,
@@ -49,10 +58,10 @@ class TagihanController extends Controller
             'totalTindakan' => $totalTindakan,
             'totalObat'     => $totalObat,
             'totalKotor'    => $totalKotor,
-            'potongan'      => 0,
+            'potongan'      => $potongan,
             'totalBayar'    => $totalBayar,
             'sudahDibayar'  => $pendaftaran->billing?->jumlah_dibayarkan ?? 0,
-            'kelasBpjs'     => $pendaftaran->pasien->kelas_bpjs,
+            'kelasBpjs'     => $kelasBpjs,
         ]);
     }
 }

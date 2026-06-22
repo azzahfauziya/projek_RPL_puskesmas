@@ -22,16 +22,42 @@ function openDatePicker() {
 }
 
 const filtered = computed(() => {
-    const source = Array.isArray(props.kunjungan) ? props.kunjungan : []
-    if (!search.value && !filterTanggal.value) return source
-    return source.filter(p => {
-        const matchSearch = !search.value || 
+    let source = Array.isArray(props.kunjungan)
+        ? [...props.kunjungan]
+        : []
+
+    source = source.filter(p => {
+        const matchSearch =
+            !search.value ||
             (p.no_rm ?? '').toLowerCase().includes(search.value.toLowerCase()) ||
             (p.pasien?.nama ?? '').toLowerCase().includes(search.value.toLowerCase())
-        const matchTanggal = !filterTanggal.value || 
+
+        const matchTanggal =
+            !filterTanggal.value ||
             p.tanggal_kunjungan === filterTanggal.value
+
         return matchSearch && matchTanggal
     })
+
+    source.sort((a, b) => {
+        if (
+            a.status_pembayaran !== 'lunas' &&
+            b.status_pembayaran === 'lunas'
+        ) {
+            return -1
+        }
+
+        if (
+            a.status_pembayaran === 'lunas' &&
+            b.status_pembayaran !== 'lunas'
+        ) {
+            return 1
+        }
+
+        return new Date(b.tanggal_kunjungan) - new Date(a.tanggal_kunjungan)
+    })
+
+    return source
 })
 
 const totalPages = computed(() => Math.ceil(filtered.value.length / perPage))
