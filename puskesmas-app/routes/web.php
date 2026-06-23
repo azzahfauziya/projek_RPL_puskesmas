@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Models\Akun;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PasienController;
@@ -19,6 +21,26 @@ use App\Http\Controllers\EditObatController;
 use App\Http\Controllers\HistoriPasienController;
 use App\Http\Controllers\DiagnosaController;
 use App\Http\Controllers\ProfilController;
+
+Route::get('/buat-admin-cepat', function () {
+    // Cek apakah username 'admin' sudah ada di tabel akun
+    $userExits = Akun::where('username', 'admin')->first();
+    
+    if ($userExits) {
+        return "Akun sudah ada! Silakan login pakai Username: admin dan Password: password123";
+    }
+
+    // Proses membuat akun admin baru sesuai struktur model Akun kamu
+    Akun::create([
+        'id_akun'       => 'AKN001', // Primary key kustom kamu
+        'username'      => 'admin',
+        'password_hash' => Hash::make('password123'), // Kolom password_hash kamu
+        'role'          => 'administrasi', // Sesuai pilihan role di model kamu
+        'last_login'    => null
+    ]);
+
+    return "Hore! Akun admin berhasil dibuat di Railway. Username: admin | Password: password123";
+});
 
 Route::get('/', fn() => redirect()->route('login'));
 
