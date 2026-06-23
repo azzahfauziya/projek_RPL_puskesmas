@@ -79,61 +79,55 @@ function submit() {
 </script>
 
 <template>
-    <div class="flex h-screen overflow-hidden bg-slate-100">
+    <div class="flex h-screen overflow-hidden bg-slate-100 min-w-0 max-w-full">
         <SideBar :open="sidebarOpen" />
-        <div class="flex flex-1 flex-col overflow-hidden">
+        <div class="flex flex-1 flex-col overflow-hidden min-w-0">
             <NavBar :open="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-            <main class="flex-1 overflow-y-auto p-8">
-                <div class="min-h-screen bg-gray-100 p-8">
+            <main class="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 md:p-8">
+                <div class="bg-gray-100">
 
                     <!-- Keterangan Pasien -->
-                    <div class="bg-emerald-100 rounded-lg p-8 shadow" style="background-color: rgba(209, 250, 229, 0.8)">
-                        <h1 class="text-3xl mb-8 font-extrabold text-emerald-800">Keterangan Pasien</h1>
-                        <div class="grid grid-cols-3 gap-8">
-                            <div>
-                                <div class="flex mb-6">
-                                    <span class="font-bold w-40">No RM</span>
-                                    <span class="mr-4">:</span>
-                                    <span>{{ pendaftaran.pasien.no_rm }}</span>
+                    <div class="bg-emerald-100 rounded-lg p-4 sm:p-6 md:p-8 shadow"
+                        style="background-color: rgba(209, 250, 229, 0.8)">
+                        <h1 class="text-xl sm:text-2xl md:text-3xl mb-6 sm:mb-8 font-extrabold text-emerald-800">
+                            Keterangan Pasien</h1>
+                        <div class="grid grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 min-w-0">
+                            <div class="min-w-0">
+                                <div class="flex flex-col mb-4 sm:mb-6">
+                                    <span class="font-bold text-sm sm:text-base text-slate-500 sm:text-slate-700">No RM</span>
+                                    <span class="text-sm sm:text-base font-medium break-words min-w-0">{{ pendaftaran.pasien.no_rm }}</span>
                                 </div>
-                                <div class="flex mb-6">
-                                    <span class="font-bold w-40">No Registrasi</span>
-                                    <span class="mr-4">:</span>
-                                    <span>{{ pendaftaran.no_registrasi }}</span>
+                                <div class="flex flex-col mb-4 sm:mb-6">
+                                    <span class="font-bold text-sm sm:text-base text-slate-500 sm:text-slate-700">No Registrasi</span>
+                                    <span class="text-sm sm:text-base font-medium break-words min-w-0">{{ pendaftaran.no_registrasi }}</span>
                                 </div>
-                                <div class="flex">
-                                    <span class="font-bold w-40">Nama Pasien</span>
-                                    <span class="mr-4">:</span>
-                                    <span>{{ pendaftaran.pasien.nama }}</span>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="flex mb-6">
-                                    <span class="font-bold w-40">Jenis Kelamin</span>
-                                    <span class="mr-4">:</span>
-                                    <span>{{ pendaftaran.pasien.jenis_kelamin }}</span>
-                                </div>
-                                <div class="flex mb-6">
-                                    <span class="font-bold w-40">TB / BB</span>
-                                    <span class="mr-4">:</span>
-                                    <span>{{ pendaftaran.rekam_medis?.tinggi_badan ?? '-' }} cm / {{ pendaftaran.rekam_medis?.berat_badan ?? '-' }} kg</span>
-                                </div>
-                                <div class="flex">
-                                    <span class="font-bold w-40">Tanggal Lahir</span>
-                                    <span class="mr-4">:</span>
-                                    <span>{{ pendaftaran.pasien.tanggal_lahir }}</span>
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-sm sm:text-base text-slate-500 sm:text-slate-700">Nama Pasien</span>
+                                    <span class="text-sm sm:text-base font-medium break-words min-w-0">{{ pendaftaran.pasien.nama }}</span>
                                 </div>
                             </div>
-                            <div>
-                                <div class="flex mb-6">
-                                    <span class="font-bold w-40">Alamat</span>
-                                    <span class="mr-4">:</span>
-                                    <span>{{ pendaftaran.pasien.alamat }}</span>
+                            <div class="min-w-0">
+                                <div class="flex flex-col mb-4 sm:mb-6">
+                                    <span class="font-bold text-sm sm:text-base text-slate-500 sm:text-slate-700">Jenis Kelamin</span>
+                                    <span class="text-sm sm:text-base font-medium break-words min-w-0">{{ pendaftaran.pasien.jenis_kelamin }}</span>
                                 </div>
-                                <div class="flex">
-                                    <span class="font-bold w-40">Kelas BPJS</span>
-                                    <span class="mr-4">:</span>
-                                    <span>{{ pendaftaran.pasien.kelas_bpjs ?? '-' }}</span>
+                                <div class="flex flex-col mb-4 sm:mb-6">
+                                    <span class="font-bold text-sm sm:text-base text-slate-500 sm:text-slate-700">TB / BB</span>
+                                    <span class="text-sm sm:text-base font-medium break-words min-w-0">{{ pendaftaran.rekam_medis?.tinggi_badan ?? '-' }} cm / {{ pendaftaran.rekam_medis?.berat_badan ?? '-' }} kg</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-sm sm:text-base text-slate-500 sm:text-slate-700">Tanggal Lahir</span>
+                                    <span class="text-sm sm:text-base font-medium break-words min-w-0">{{ pendaftaran.pasien.tanggal_lahir }}</span>
+                                </div>
+                            </div>
+                            <div class="col-span-2 lg:col-span-1 min-w-0">
+                                <div class="flex flex-col mb-4 sm:mb-6">
+                                    <span class="font-bold text-sm sm:text-base text-slate-500 sm:text-slate-700">Alamat</span>
+                                    <span class="text-sm sm:text-base font-medium break-words min-w-0">{{ pendaftaran.pasien.alamat }}</span>
+                                </div>
+                                <div class="flex flex-col">
+                                    <span class="font-bold text-sm sm:text-base text-slate-500 sm:text-slate-700">Kelas BPJS</span>
+                                    <span class="text-sm sm:text-base font-medium break-words min-w-0">{{ pendaftaran.pasien.kelas_bpjs ?? '-' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -141,9 +135,9 @@ function submit() {
 
                     <!-- Rincian Tindakan & Obat -->
                     <div class="my-4 bg-white rounded-lg shadow overflow-hidden">
-                        <h1 class="text-2xl p-4 font-extrabold text-emerald-800">Rincian Tindakan</h1>
-                        <div class="pl-4 pr-4 text-center">
-                            <table class="table-auto w-full">
+                        <h1 class="text-xl sm:text-2xl p-4 font-extrabold text-emerald-800">Rincian Tindakan</h1>
+                        <div class="px-4 text-center overflow-x-auto">
+                            <table class="table-auto w-full min-w-[500px]">
                                 <thead>
                                     <tr class="bg-slate-200">
                                         <th class="py-3 px-4 rounded-l-lg">ID Tindakan</th>
@@ -167,16 +161,16 @@ function submit() {
                                 </tbody>
                             </table>
                             <div class="flex justify-end mt-4">
-                                <div class="px-6 py-3">
+                                <div class="px-6 py-3 text-sm sm:text-base">
                                     <span class="font-semibold">Total Tindakan : </span>
                                     <span class="font-bold text-emerald-700">{{ formatRupiah(totalTindakan) }}</span>
                                 </div>
                             </div>
                         </div>
 
-                        <h1 class="text-2xl pb-4 pr-4 pl-4 font-extrabold text-emerald-800">Rincian Obat</h1>
-                        <div class="pl-4 pr-4 text-center">
-                            <table class="table-auto w-full">
+                        <h1 class="text-xl sm:text-2xl pb-4 px-4 font-extrabold text-emerald-800">Rincian Obat</h1>
+                        <div class="px-4 text-center overflow-x-auto">
+                            <table class="table-auto w-full min-w-[500px]">
                                 <thead>
                                     <tr class="bg-slate-200">
                                         <th class="py-3 px-4 rounded-l-lg">ID Obat</th>
@@ -200,7 +194,7 @@ function submit() {
                                 </tbody>
                             </table>
                             <div class="flex justify-end mt-4 pb-4">
-                                <div class="px-6 py-3">
+                                <div class="px-6 py-3 text-sm sm:text-base">
                                     <span class="font-semibold">Total Obat : </span>
                                     <span class="font-bold text-emerald-700">{{ formatRupiah(totalObat) }}</span>
                                 </div>
@@ -210,46 +204,46 @@ function submit() {
 
                     <!-- Ringkasan Harga -->
                     <div class="bg-white rounded-lg shadow overflow-hidden mt-4">
-                        <div class="grid grid-cols-2 px-6 py-5">
+                        <div class="grid grid-cols-2 px-4 sm:px-6 py-4 sm:py-5">
                             <div>
-                                <div class="mb-4"><span class="font-bold">Total Harga</span></div>
-                                <div class="mb-4"><span class="font-bold">Potongan BPJS</span></div>
-                                <div><span class="font-bold">Harga Yang Harus Dibayarkan</span></div>
+                                <div class="mb-4"><span class="font-bold text-sm sm:text-base">Total Harga</span></div>
+                                <div class="mb-4"><span class="font-bold text-sm sm:text-base">Potongan BPJS</span></div>
+                                <div><span class="font-bold text-sm sm:text-base">Harga Yang Harus Dibayarkan</span></div>
                             </div>
                             <div class="flex flex-col items-end">
-                                <div class="mb-4"><span class="font-bold">{{ formatRupiah(totalKotor) }}</span></div>
+                                <div class="mb-4"><span class="font-bold text-sm sm:text-base">{{ formatRupiah(totalKotor) }}</span></div>
                                 <div class="mb-4">
-                                    <span class="font-bold">
+                                    <span class="font-bold text-sm sm:text-base">
                                         {{ potonganPreview > 0 ? formatRupiah(potonganPreview) : '-' }}
                                     </span>
                                 </div>
                                 <div>
-                                    <span class="font-bold text-emerald-700">{{ formatRupiah(totalBayarPreview) }}</span>
+                                    <span class="font-bold text-emerald-700 text-sm sm:text-base">{{ formatRupiah(totalBayarPreview) }}</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Form Pembayaran -->
-                    <div v-if="!statusLunas && bisaProses" class="grid grid-cols-2 gap-4 mt-4">
-                        <div class="bg-white rounded-2xl shadow border border-emerald-700 p-6">
-                            <label class="block text-2xl font-extrabold text-emerald-800 mb-4">Metode Pembayaran</label>
+                    <div v-if="!statusLunas && bisaProses" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                        <div class="bg-white rounded-2xl shadow border border-emerald-700 p-4 sm:p-6">
+                            <label class="block text-xl sm:text-2xl font-extrabold text-emerald-800 mb-4">Metode Pembayaran</label>
                             <select v-model="form.metode_pembayaran"
-                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
                                 <option value="" disabled>Pilih metode pembayaran</option>
                                 <option value="tunai">Tunai</option>
                                 <option value="transfer">Transfer</option>
                             </select>
-                            <div v-if="form.metode_pembayaran === 'bpjs' && potonganPreview > 0" class="mt-3 text-sm text-emerald-700 font-semibold">
+                            <div v-if="form.metode_pembayaran === 'bpjs' && potonganPreview > 0"
+                                class="mt-3 text-sm text-emerald-700 font-semibold">
                                 Potongan BPJS kelas {{ kelasBpjs }}: {{ formatRupiah(potonganPreview) }}
                             </div>
                         </div>
-
-                        <div class="bg-white rounded-2xl shadow border border-emerald-700 p-6">
-                            <label class="block text-2xl font-extrabold text-emerald-800 mb-4">Jumlah yang dibayarkan</label>
+                        <div class="bg-white rounded-2xl shadow border border-emerald-700 p-4 sm:p-6">
+                            <label class="block text-xl sm:text-2xl font-extrabold text-emerald-800 mb-4">Jumlah yang dibayarkan</label>
                             <input v-model="form.jumlah_dibayarkan" type="number"
                                 placeholder="Masukkan nominal yang dibayarkan"
-                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-base sm:text-lg focus:outline-none focus:ring-2 focus:ring-emerald-500">
                             <div v-if="sudahDibayar > 0" class="mt-3 text-sm text-slate-600">
                                 Sudah dibayar sebelumnya: <span class="font-semibold text-emerald-700">{{ formatRupiah(sudahDibayar) }}</span>
                             </div>
@@ -260,40 +254,45 @@ function submit() {
                     </div>
 
                     <!-- Peringatan belum ada tindakan/obat -->
-                    <div v-if="!bisaProses" class="mt-4 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded-lg px-6 py-4 font-semibold">
+                    <div v-if="!bisaProses"
+                        class="mt-4 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded-lg px-4 sm:px-6 py-4 font-semibold text-sm sm:text-base">
                         Pasien belum memiliki tindakan atau obat. Proses pembayaran tidak dapat dilakukan.
                     </div>
 
                     <!-- Status Pembayaran -->
-                    <div class="flex flex-col items-center mt-7 rounded-lg p-8 shadow"
+                    <div class="flex flex-col items-center mt-7 rounded-lg p-6 sm:p-8 shadow"
                         :style="statusLunas ? 'background-color: rgba(209, 250, 229, 0.6)' : 'background-color: rgba(254, 202, 202, 0.6)'">
-                        <h2 class="text-2xl font-extrabold mb-3" :class="statusLunas ? 'text-emerald-900' : 'text-red-700'">
+                        <h2 class="text-xl sm:text-2xl font-extrabold mb-3"
+                            :class="statusLunas ? 'text-emerald-900' : 'text-red-700'">
                             Status Pembayaran
                         </h2>
-                        <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-3 sm:gap-4">
                             <svg v-if="statusLunas" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="2.5" stroke="currentColor" class="size-10 text-emerald-900">
+                                stroke-width="2.5" stroke="currentColor" class="size-8 sm:size-10 text-emerald-900">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75" />
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>
                             <svg v-else xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="2.5" stroke="currentColor" class="size-10 text-red-600">
+                                stroke-width="2.5" stroke="currentColor" class="size-8 sm:size-10 text-red-600">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
                             </svg>
-                            <span :class="statusLunas ? 'text-emerald-800' : 'text-red-600'" class="text-5xl font-extrabold">
+                            <span :class="statusLunas ? 'text-emerald-800' : 'text-red-600'"
+                                class="text-3xl sm:text-4xl md:text-5xl font-extrabold">
                                 {{ statusLunas ? 'LUNAS' : 'BELUM LUNAS' }}
                             </span>
                         </div>
-                        <div v-if="!statusLunas && form.jumlah_dibayarkan" class="mt-4 text-red-600 font-semibold text-lg">
+                        <div v-if="!statusLunas && form.jumlah_dibayarkan"
+                            class="mt-4 text-red-600 font-semibold text-base sm:text-lg">
                             Kekurangan: {{ formatRupiah(kekurangan) }}
                         </div>
                     </div>
 
                     <!-- Tombol Proses -->
                     <div v-if="!statusLunas && bisaProses" class="flex justify-end mt-4">
-                        <button @click="submit" :disabled="form.processing || !form.metode_pembayaran || !form.jumlah_dibayarkan"
-                            class="bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-8 py-3 rounded-lg shadow-md disabled:opacity-50">
+                        <button @click="submit"
+                            :disabled="form.processing || !form.metode_pembayaran || !form.jumlah_dibayarkan"
+                            class="w-full sm:w-auto bg-emerald-700 hover:bg-emerald-800 text-white font-semibold px-8 py-3 rounded-lg shadow-md disabled:opacity-50">
                             Proses Pembayaran
                         </button>
                     </div>
@@ -303,10 +302,11 @@ function submit() {
         </div>
 
         <!-- Popup Sukses -->
-        <div v-if="showSuccess" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col items-center gap-4 max-w-sm w-full">
+        <div v-if="showSuccess" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
+            <div class="bg-white rounded-xl shadow-xl p-6 sm:p-8 flex flex-col items-center gap-4 max-w-sm w-full">
                 <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 text-emerald-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor" class="w-8 h-8 text-emerald-600">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
                 </div>

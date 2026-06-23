@@ -20,119 +20,104 @@ import { useForm } from '@inertiajs/vue3'
 </script>
 
 <template>
-    <div class="min-h-screen bg-gray-100 p-8">
-        <div class="bg-white rounded-lg shadow-md border border-gray-300 p-6 mb-8">
-            <div class="bg-green-100 rounded-lg p-10 shadow">
-                <h1 class="text-3xl mb-8 font-extrabold text-emerald-800 dark:text-emerald-400">
+    <div class="min-h-screen bg-gray-100 p-4 md:p-8">
+        <div class="bg-white rounded-lg shadow-md border border-gray-300 p-4 md:p-6 mb-8">
+
+            <!-- Keterangan Pasien -->
+            <div class="bg-green-100 rounded-lg p-6 md:p-10 shadow">
+                <h1 class="text-2xl md:text-3xl mb-6 md:mb-8 font-extrabold text-emerald-800 dark:text-emerald-400">
                     Keterangan Pasien
                 </h1>
-
-                <div class="grid grid-cols-2 gap-8">
-
+                <div class="grid grid-cols-2 gap-4 md:gap-8">
                     <!-- Kolom 1 -->
                     <div>
-                        <div class="flex mb-6">
-                            <span class="font-bold w-40">No RM</span>
-                            <span class="mr-4">:</span>
-                            <span>{{ pendaftaran.pasien.no_rm }}</span>
+                        <div class="flex flex-col md:flex-row mb-4 md:mb-6">
+                            <span class="font-bold md:w-40 shrink-0">No RM</span>
+                            <span class="hidden md:inline mr-4">:</span>
+                            <span class="break-words min-w-0">{{ pendaftaran.pasien.no_rm }}</span>
                         </div>
-
-                        <div class="flex mb-6">
-                            <span class="font-bold w-40">Nama Pasien</span>
-                            <span class="mr-4">:</span>
-                            <span>{{ pendaftaran.pasien.nama }}</span>
+                        <div class="flex flex-col md:flex-row mb-4 md:mb-6">
+                            <span class="font-bold md:w-40 shrink-0">Nama Pasien</span>
+                            <span class="hidden md:inline mr-4">:</span>
+                            <span class="break-words min-w-0">{{ pendaftaran.pasien.nama }}</span>
                         </div>
-
-                        <div class="flex">
-                            <span class="font-bold w-40">Tanggal Lahir</span>
-                            <span class="mr-4">:</span>
-                            <span>{{ pendaftaran.pasien.tanggal_lahir }}</span>
+                        <div class="flex flex-col md:flex-row">
+                            <span class="font-bold md:w-40 shrink-0">Tanggal Lahir</span>
+                            <span class="hidden md:inline mr-4">:</span>
+                            <span class="break-words min-w-0">{{ pendaftaran.pasien.tanggal_lahir }}</span>
                         </div>
                     </div>
-
                     <!-- Kolom 2 -->
                     <div>
-                        <div class="flex mb-6">
-                            <span class="font-bold w-40">Jenis Kelamin</span>
-                            <span class="mr-4">:</span>
-                            <span>{{ pendaftaran.pasien.jenis_kelamin }}</span>
+                        <div class="flex flex-col md:flex-row mb-4 md:mb-6">
+                            <span class="font-bold md:w-40 shrink-0">Jenis Kelamin</span>
+                            <span class="hidden md:inline mr-4">:</span>
+                            <span class="break-words min-w-0">{{ pendaftaran.pasien.jenis_kelamin }}</span>
                         </div>
-
-                        <div class="flex mb-6">
-                            <span class="font-bold w-40">TB / BB</span>
-                            <span class="mr-4">:</span>
-                            <span>
+                        <div class="flex flex-col md:flex-row mb-4 md:mb-6">
+                            <span class="font-bold md:w-40 shrink-0">TB / BB</span>
+                            <span class="hidden md:inline mr-4">:</span>
+                            <span class="break-words min-w-0">
                                 {{ pendaftaran.rekam_medis?.tinggi_badan ?? '-' }} cm /
                                 {{ pendaftaran.rekam_medis?.berat_badan ?? '-' }} kg
-                            </span> <!-- belum ada di tabel? -->
+                            </span>
                         </div>
-
-                        <div class="flex">
-                            <span class="font-bold w-40">Kelas BPJS</span>
-                            <span class="mr-4">:</span>
-                            <span>{{ pendaftaran.pasien.kelas_bpjs }}</span>
+                        <div class="flex flex-col md:flex-row">
+                            <span class="font-bold md:w-40 shrink-0">Kelas BPJS</span>
+                            <span class="hidden md:inline mr-4">:</span>
+                            <span class="break-words min-w-0">{{ pendaftaran.pasien.kelas_bpjs }}</span>
                         </div>
                     </div>
-
                 </div>
             </div>
 
-            <div class="p-8">
+            <!-- Form -->
+            <div class="p-4 md:p-8">
 
                 <!-- Header -->
-                <div class="flex justify-between items-center mb-8">
-                    <h1 class="text-4xl font-bold text-green-900">
+                <div class="flex justify-between items-center mb-6 md:mb-8">
+                    <h1 class="text-2xl md:text-4xl font-bold text-green-900">
                         Input Resep Obat
                     </h1>
                 </div>
 
-                <!-- Form -->
                 <div class="max-w-4xl">
 
-                    <!-- No Registrasi -->
-                    <div class="grid grid-cols-[220px_1fr] items-center mb-4">
-                        <label class="text-2xl font-medium">
-                            Nama Obat
-                        </label>
-
+                    <!-- Nama Obat -->
+                    <div class="flex flex-col md:grid md:grid-cols-[220px_1fr] md:items-center mb-4 gap-2 md:gap-0">
+                        <label class="text-xl md:text-2xl font-medium">Nama Obat</label>
                         <select v-model="form.id_obat"
                             class="border border-gray-500 rounded-lg h-12 px-4 bg-white w-full">
                             <option value="">Pilih Obat</option>
-
                             <option v-for="item in props.obat" :key="item.id_obat" :value="item.id_obat">
                                 {{ item.nama_obat }}
                             </option>
                         </select>
                     </div>
 
-                    <!-- Keluhan Awal -->
-                    <div class="grid grid-cols-[220px_1fr] items-center mb-4">
-                        <label class="text-2xl font-medium">
-                            Jumlah
-                        </label>
-
-                        <input type="number" v-model="form.jumlah" class="border border-gray-500 rounded-lg h-12 px-4 bg-white w-full">
+                    <!-- Jumlah -->
+                    <div class="flex flex-col md:grid md:grid-cols-[220px_1fr] md:items-center mb-4 gap-2 md:gap-0">
+                        <label class="text-xl md:text-2xl font-medium">Jumlah</label>
+                        <input type="number" v-model="form.jumlah"
+                            class="border border-gray-500 rounded-lg h-12 px-4 bg-white w-full">
                     </div>
 
-                    <!-- Keluhan Awal -->
-                    <div class="grid grid-cols-[220px_1fr] items-center mb-4">
-                        <label class="text-2xl font-medium">
-                            Aturan Pakai
-                        </label>
-
-                        <input type="text" v-model="form.aturan_pakai" class="border border-gray-500 rounded-lg h-12 px-4 bg-white w-full">
+                    <!-- Aturan Pakai -->
+                    <div class="flex flex-col md:grid md:grid-cols-[220px_1fr] md:items-center mb-4 gap-2 md:gap-0">
+                        <label class="text-xl md:text-2xl font-medium">Aturan Pakai</label>
+                        <input type="text" v-model="form.aturan_pakai"
+                            class="border border-gray-500 rounded-lg h-12 px-4 bg-white w-full">
                     </div>
 
                     <!-- Button -->
-                    <div class="flex justify-end">
+                    <div class="flex justify-end mt-6 md:mt-0">
                         <button @click="submit"
-                            class="bg-green-900 hover:bg-green-800 text-white font-semibold text-xl px-16 py-3 rounded-xl">
+                            class="bg-green-900 hover:bg-green-800 text-white font-semibold text-lg md:text-xl px-10 md:px-16 py-3 rounded-xl">
                             Kirim
                         </button>
                     </div>
 
                 </div>
-
             </div>
         </div>
     </div>

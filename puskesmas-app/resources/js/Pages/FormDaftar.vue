@@ -132,33 +132,37 @@ function submit() {
 </script>
 
 <template>
-    <div class="flex h-screen overflow-hidden bg-slate-100">
+    <div class="flex h-screen overflow-hidden bg-slate-100 min-w-0">
         <SideBar :open="sidebarOpen" />
-        <div class="flex flex-1 flex-col overflow-hidden">
+        <div class="flex flex-1 flex-col overflow-hidden min-w-0">
             <NavBar :open="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-            <main class="flex-1 overflow-y-auto p-8">
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 min-w-0">
 
-                <div class="min-h-screen bg-gray-100 p-8">
-                    <div class="bg-white rounded-lg shadow-md border border-gray-300 p-6 mb-8">
-                        <div class="mb-8">
-                            <h1 class="text-4xl font-bold text-emerald-800">
+                <div class="bg-gray-100">
+                    <div class="bg-white rounded-lg shadow-md border border-gray-300 p-4 sm:p-6 mb-8">
+                        <div class="mb-6 sm:mb-8">
+                            <h1 class="text-2xl sm:text-3xl md:text-4xl font-bold text-emerald-800">
                                 Form Pendaftaran Pasien
                             </h1>
                         </div>
 
-                        <div class="max-w-4xl mx-auto mt-5">
-                            <div class="grid grid-cols-[220px_1fr] items-center mb-6">
-                                <label class="font-blod text-xl pt-3">No Registrasi</label>
-
-                                <input :value="form.no_registrasi" readonly class="bg-gray-100 rounded-lg">
+                        <div class="w-full mt-5">
+                            <!-- No Registrasi -->
+                            <div
+                                class="grid grid-cols-1 sm:grid-cols-[180px_1fr] md:grid-cols-[220px_1fr] items-center mb-6 gap-1 sm:gap-0">
+                                <label class="font-bold text-base sm:text-xl">No Registrasi</label>
+                                <input :value="form.no_registrasi" readonly
+                                    class="bg-gray-100 rounded-lg h-12 px-4 w-full" />
                             </div>
+
                             <!-- Search No RM -->
-                            <div class="grid grid-cols-[220px_1fr] items-start mb-6">
-                                <label class="font-bold text-xl pt-3">No. RM</label>
+                            <div
+                                class="grid grid-cols-1 sm:grid-cols-[180px_1fr] md:grid-cols-[220px_1fr] items-start mb-6 gap-1 sm:gap-0">
+                                <label class="font-bold text-base sm:text-xl pt-0 sm:pt-3">No. RM</label>
                                 <div class="relative">
                                     <input v-model="searchQuery" type="text"
                                         placeholder="Ketik No. RM untuk cari pasien lama, kosongkan jika pasien baru..."
-                                        class="h-12 border border-gray-500 rounded-lg px-4 w-full bg-white" />
+                                        class="h-12 border border-gray-500 rounded-lg px-4 w-full bg-white text-sm sm:text-base" />
                                     <div v-if="searchResults.length > 0"
                                         class="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg mt-1 max-h-64 overflow-y-auto">
                                         <div v-for="p in searchResults" :key="p.no_rm" @click="pilihPasien(p)"
@@ -177,35 +181,37 @@ function submit() {
                             </div>
 
                             <!-- Nama Pasien -->
-                            <div class="grid grid-cols-[220px_1fr] items-center mb-6">
-                                <label class="font-bold text-xl">Nama Pasien</label>
+                            <div
+                                class="grid grid-cols-1 sm:grid-cols-[180px_1fr] md:grid-cols-[220px_1fr] items-center mb-6 gap-1 sm:gap-0">
+                                <label class="font-bold text-base sm:text-xl">Nama Pasien</label>
                                 <input type="text" v-model="form.nama" :readonly="isExisting"
                                     :class="isExisting ? 'bg-gray-100 text-gray-500' : 'bg-white'"
                                     class="h-12 border border-gray-500 rounded-lg px-4 w-full" />
                             </div>
 
                             <!-- Tanggal Lahir -->
-                            <div class="grid grid-cols-[220px_1fr] items-center mb-6">
-                                <label class="font-bold text-xl">Tanggal Lahir</label>
+                            <div
+                                class="grid grid-cols-1 sm:grid-cols-[180px_1fr] md:grid-cols-[220px_1fr] items-center mb-6 gap-1 sm:gap-0">
+                                <label class="font-bold text-base sm:text-xl">Tanggal Lahir</label>
                                 <input v-if="!isExisting" type="date" v-model="form.tanggal_lahir"
-                                    class="h-12 border border-gray-500 rounded-lg px-4 w-full bg-white" />
+                                    class="h-12 border border-gray-500 rounded-lg px-4 w-full bg-white min-w-0 max-w-full" />
                                 <input v-else type="text" :value="form.tanggal_lahir" readonly
                                     class="h-12 border border-gray-300 rounded-lg px-4 w-full bg-gray-100 text-gray-500" />
                             </div>
 
                             <!-- Jenis Kelamin -->
-                            <div class="grid grid-cols-[220px_1fr] items-center mb-8">
-                                <label class="font-bold text-xl">Jenis Kelamin</label>
-                                <div v-if="!isExisting" class="flex items-center gap-6">
-                                    <label class="flex items-center gap-3 cursor-pointer">
-                                        <input type="radio" v-model="form.jenis_kelamin" value="P"
-                                            name="gender">
-                                        <span class="text-xl">Perempuan</span>
+                            <div
+                                class="grid grid-cols-1 sm:grid-cols-[180px_1fr] md:grid-cols-[220px_1fr] items-center mb-8 gap-1 sm:gap-0">
+                                <label class="font-bold text-base sm:text-xl">Jenis Kelamin</label>
+                                <div v-if="!isExisting"
+                                    class="flex items-center gap-4 sm:gap-6 min-w-0 w-full overflow-hidden">
+                                    <label class="flex items-center gap-2 sm:gap-3 cursor-pointer shrink-0">
+                                        <input type="radio" v-model="form.jenis_kelamin" value="P" name="gender">
+                                        <span class="text-base sm:text-xl">Perempuan</span>
                                     </label>
-                                    <label class="flex items-center gap-3 cursor-pointer">
-                                        <input type="radio" v-model="form.jenis_kelamin" value="L"
-                                            name="gender">
-                                        <span class="text-xl">Laki-laki</span>
+                                    <label class="flex items-center gap-2 sm:gap-3 cursor-pointer shrink-0">
+                                        <input type="radio" v-model="form.jenis_kelamin" value="L" name="gender">
+                                        <span class="text-base sm:text-xl">Laki-laki</span>
                                     </label>
                                 </div>
                                 <input v-else type="text" :value="form.jenis_kelamin" readonly
@@ -213,23 +219,26 @@ function submit() {
                             </div>
 
                             <!-- Alamat -->
-                            <div class="grid grid-cols-[220px_1fr] items-center mb-6">
-                                <label class="font-medium text-xl">Alamat</label>
+                            <div
+                                class="grid grid-cols-1 sm:grid-cols-[180px_1fr] md:grid-cols-[220px_1fr] items-center mb-6 gap-1 sm:gap-0">
+                                <label class="font-medium text-base sm:text-xl">Alamat</label>
                                 <input type="text" v-model="form.alamat"
                                     class="h-12 border border-gray-500 rounded-lg px-4 w-full bg-white" />
                             </div>
 
                             <!-- No HP -->
-                            <div class="grid grid-cols-[220px_1fr] items-center mb-6">
-                                <label class="font-medium text-xl">No. HP</label>
+                            <div
+                                class="grid grid-cols-1 sm:grid-cols-[180px_1fr] md:grid-cols-[220px_1fr] items-center mb-6 gap-1 sm:gap-0">
+                                <label class="font-medium text-base sm:text-xl">No. HP</label>
                                 <input type="text" v-model="form.no_hp" :readonly="isExisting"
                                     :class="isExisting ? 'bg-gray-100 text-gray-500' : 'bg-white'"
                                     class="h-12 border border-gray-500 rounded-lg px-4 w-full" />
                             </div>
 
                             <!-- Kelas BPJS -->
-                            <div class="grid grid-cols-[220px_1fr] items-center mb-6">
-                                <label class="font-medium text-xl">Kelas BPJS</label>
+                            <div
+                                class="grid grid-cols-1 sm:grid-cols-[180px_1fr] md:grid-cols-[220px_1fr] items-center mb-6 gap-1 sm:gap-0">
+                                <label class="font-medium text-base sm:text-xl">Kelas BPJS</label>
                                 <select v-model="form.kelas_bpjs" :disabled="isExisting"
                                     :class="isExisting ? 'bg-gray-100 text-gray-500' : 'bg-white'"
                                     class="h-12 border border-gray-500 rounded-lg px-4 w-full">
@@ -242,40 +251,30 @@ function submit() {
                             </div>
 
                             <!-- Tanggal Kunjungan -->
-                            <div class="grid grid-cols-[220px_1fr] items-center mb-6">
-                                <label class="font-bold text-xl">Tanggal Kunjungan</label>
+                            <div
+                                class="grid grid-cols-1 sm:grid-cols-[180px_1fr] md:grid-cols-[220px_1fr] items-center mb-6 gap-1 sm:gap-0 ">
+                                <label class="font-bold text-base sm:text-xl">Tanggal Kunjungan</label>
                                 <input type="date" v-model="form.tanggal_kunjungan"
-                                    class="h-12 border border-gray-500 rounded-lg px-4 w-full bg-white" />
+                                    class="h-12 border border-gray-500 rounded-lg px-4 w-full bg-white min-w-0 max-w-full" />
                             </div>
 
-                                    <!-- Dokter -->
-                                    <!-- <div class="grid grid-cols-[220px_1fr] items-center mb-6">
-                            <label class="font-bold text-xl">Dokter</label>
-                            <select v-model="form.id_dokter"
-                                class="h-12 border border-gray-500 rounded-lg px-4 w-full bg-white">
-                                <option value="" disabled>Pilih dokter</option>
-                                <option v-for="d in dokter" :key="d.id_dokter" :value="d.id_dokter">
-                                    {{ d.nama }}
-                                </option>
-                            </select>
-                        </div> -->
-
                             <!-- Keluhan Awal -->
-                            <div class="grid grid-cols-[220px_1fr] items-start mb-12">
-                                <label class="font-bold text-xl pt-3">Keluhan Awal</label>
+                            <div
+                                class="grid grid-cols-1 sm:grid-cols-[180px_1fr] md:grid-cols-[220px_1fr] items-start mb-8 sm:mb-12 gap-1 sm:gap-0">
+                                <label class="font-bold text-base sm:text-xl pt-0 sm:pt-3">Keluhan Awal</label>
                                 <textarea v-model="form.keluhan_awal" rows="4"
                                     class="border border-gray-500 rounded-lg px-4 py-3 w-full bg-white resize-none"
                                     placeholder="Tulis keluhan pasien..."></textarea>
                             </div>
 
                             <!-- Button -->
-                            <div class="flex justify-end p-8 gap-4">
+                            <div class="flex justify-end p-4 sm:p-8 gap-3 sm:gap-4">
                                 <button type="button" @click="resetForm"
-                                    class="bg-slate-400 hover:bg-slate-500 text-white font-semibold text-xl px-6 py-3 rounded-lg">
+                                    class="bg-slate-400 hover:bg-slate-500 text-white font-semibold text-base sm:text-xl px-4 sm:px-6 py-2 sm:py-3 rounded-lg">
                                     Reset
                                 </button>
                                 <button type="button" @click="submit" :disabled="form.processing"
-                                    class="bg-green-800 hover:bg-green-900 text-white font-semibold text-xl px-6 py-3 rounded-lg disabled:opacity-50">
+                                    class="bg-green-800 hover:bg-green-900 text-white font-semibold text-base sm:text-xl px-4 sm:px-6 py-2 sm:py-3 rounded-lg disabled:opacity-50">
                                     Daftar
                                 </button>
                             </div>
@@ -284,12 +283,13 @@ function submit() {
                 </div>
             </main>
         </div>
+
         <!-- Popup sukses -->
-        <div v-if="showSuccess"
-            class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col items-center gap-4 max-w-sm w-full">
+        <div v-if="showSuccess" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
+            <div class="bg-white rounded-xl shadow-xl p-6 sm:p-8 flex flex-col items-center gap-4 max-w-sm w-full">
                 <div class="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 text-emerald-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                        stroke="currentColor" class="w-8 h-8 text-emerald-600">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
                 </div>

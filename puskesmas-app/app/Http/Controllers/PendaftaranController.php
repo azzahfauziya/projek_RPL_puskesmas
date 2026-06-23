@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\DB;
 use App\Models\Pasien;
 use App\Models\Dokter;
 use App\Models\Pendaftaran;
@@ -89,7 +89,7 @@ class PendaftaranController extends Controller
 
         return 'RMD' . str_pad($number, 4, '0', STR_PAD_LEFT);
     }
-    
+
     public function storeDarurat(Request $request)
     {
         $request->validate([
@@ -147,27 +147,29 @@ class PendaftaranController extends Controller
 
             // Hapus pasien darurat sementara
             Pasien::where('no_rm', $noRmLama)->delete();
-
         } else {
-            // Pasien baru → generate no_rm normal (bukan RMD)
             $noRmBaru = IdGenerator::generateNoRm();
 
-            // Update data pasien darurat (ganti no_rm-nya)
-            Pasien::where('no_rm', $noRmLama)->update([
-                'no_rm'         => $noRmBaru,
-                'nama'          => $request->nama,
-                'tanggal_lahir' => $request->tanggal_lahir,
-                'jenis_kelamin' => $request->jenis_kelamin,
-                'alamat'        => $request->alamat,
-                'no_hp'         => $request->no_hp,
-                'kelas_bpjs'    => $request->kelas_bpjs,
-            ]);
+            DB::transaction(function () use ($noRmLama, $noRmBaru, $request, $pendaftaran) {
+                DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
-            // Update pendaftaran pakai no_rm baru
-            $pendaftaran->update([
-                'no_rm'        => $noRmBaru,
-                'keluhan_awal' => $request->keluhan_awal,
-            ]);
+                Pasien::where('no_rm', $noRmLama)->update([
+                    'no_rm'         => $noRmBaru,
+                    'nama'          => $request->nama,
+                    'tanggal_lahir' => $request->tanggal_lahir,
+                    'jenis_kelamin' => $request->jenis_kelamin,
+                    'alamat'        => $request->alamat,
+                    'no_hp'         => $request->no_hp,
+                    'kelas_bpjs'    => $request->kelas_bpjs,
+                ]);
+
+                $pendaftaran->update([
+                    'no_rm'        => $noRmBaru,
+                    'keluhan_awal' => $request->keluhan_awal,
+                ]);
+
+                DB::statement('SET FOREIGN_KEY_CHECKS=1');
+            });
         }
 
         return redirect()

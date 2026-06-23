@@ -2,190 +2,162 @@
 import { useForm } from '@inertiajs/vue3'
 import { computed } from 'vue'
 
-    const props = defineProps({
-        pendaftaran: Object,
-        dokters: Array
-    })
+const props = defineProps({
+    pendaftaran: Object,
+    dokters: Array
+})
 
-    const tanggalHariIni = computed(() => {
-        return new Date().toLocaleDateString('id-ID', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric'
-        })
+const tanggalHariIni = computed(() => {
+    return new Date().toLocaleDateString('id-ID', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
     })
+})
 
-    const form = useForm({
-        no_registrasi: props.pendaftaran.no_registrasi,
-        id_dokter: '',
-        tinggi_badan: '',
-        berat_badan: '',
-        tensi: '',
-        suhu: '',
-        diagnosa: ''
-    })
+const form = useForm({
+    no_registrasi: props.pendaftaran.no_registrasi,
+    id_dokter: '',
+    tinggi_badan: '',
+    berat_badan: '',
+    tensi: '',
+    suhu: '',
+    diagnosa: ''
+})
 
-    const submit = () => {
-        form.post(route('diagnosa.store'))
-    }
+const submit = () => {
+    form.post(route('diagnosa.store'))
+}
 </script>
 
 <template>
     <div class="min-h-screen bg-gray-100 p-8">
         <div class="bg-white rounded-lg shadow-md border border-gray-300 p-6 mb-8">
-            <div class="bg-green-100 rounded-lg p-10 shadow">
-                <h1 class="text-3xl mb-8 font-extrabold text-emerald-800 dark:text-emerald-400">
+            <div class="bg-green-100 rounded-lg p-6 md:p-10 shadow">
+                <h1 class="text-2xl md:text-3xl mb-6 md:mb-8 font-extrabold text-emerald-800 dark:text-emerald-400">
                     Keterangan Pasien
                 </h1>
 
-                <div class="grid grid-cols-2 gap-8">
+                <div class="grid grid-cols-2 gap-4 md:gap-8">
 
                     <!-- Kolom 1 -->
                     <div>
-                        <div class="flex mb-6">
-                            <span class="font-bold w-40">No RM</span>
-                            <span class="mr-4">:</span>
+                        <div class="flex flex-col md:flex-row mb-4 md:mb-6">
+                            <span class="font-bold md:w-40 shrink-0">No RM</span>
+                            <span class="hidden md:inline mr-4">:</span>
                             <span>{{ pendaftaran.pasien?.no_rm }}</span>
                         </div>
-
-                        <div class="flex mb-6">
-                            <span class="font-bold w-40">Nama Pasien</span>
-                            <span class="mr-4">:</span>
+                        <div class="flex flex-col md:flex-row mb-4 md:mb-6">
+                            <span class="font-bold md:w-40 shrink-0">Nama Pasien</span>
+                            <span class="hidden md:inline mr-4">:</span>
                             <span>{{ pendaftaran.pasien.nama }}</span>
                         </div>
-
-                        <div class="flex">
-                            <span class="font-bold w-40">Tanggal Lahir</span>
-                            <span class="mr-4">:</span>
+                        <div class="flex flex-col md:flex-row">
+                            <span class="font-bold md:w-40 shrink-0">Tanggal Lahir</span>
+                            <span class="hidden md:inline mr-4">:</span>
                             <span>{{ pendaftaran.pasien.tanggal_lahir }}</span>
                         </div>
                     </div>
 
                     <!-- Kolom 2 -->
                     <div>
-                        <div class="flex mb-6">
-                            <span class="font-bold w-40">Jenis Kelamin</span>
-                            <span class="mr-4">:</span>
+                        <div class="flex flex-col md:flex-row mb-4 md:mb-6">
+                            <span class="font-bold md:w-40 shrink-0">Jenis Kelamin</span>
+                            <span class="hidden md:inline mr-4">:</span>
                             <span>{{ pendaftaran.pasien.jenis_kelamin }}</span>
                         </div>
-
-                        <div class="flex">
-                            <span class="font-bold w-40">Kelas BPJS</span>
-                            <span class="mr-4">:</span>
+                        <div class="flex flex-col md:flex-row">
+                            <span class="font-bold md:w-40 shrink-0">Kelas BPJS</span>
+                            <span class="hidden md:inline mr-4">:</span>
                             <span>{{ pendaftaran.pasien.kelas_bpjs }}</span>
                         </div>
                     </div>
 
                 </div>
             </div>
-    
-            <div class="min-h-screen p-10">
+
+            <!-- <div class="min-h-screen p-10"> -->
+            <!-- Form -->
+            <div class="p-4 md:p-10">
                 <form @submit.prevent="submit">
-        
+
                     <!-- Header -->
-                    <div class="flex justify-between items-center mb-8">
-                        <h1 class="text-4xl font-bold text-green-900">
+                    <div class="flex flex-wrap justify-between items-center gap-4 mb-8">
+                        <h1 class="text-3xl md:text-4xl font-bold text-green-900">
                             Input Diagnosa
                         </h1>
-        
-                        <div class="flex items-center gap-3 border-2 border-green-900 rounded-2xl px-6 py-3 bg-white">
+                        <div
+                            class="flex items-center gap-3 border-2 border-green-900 rounded-2xl px-4 md:px-6 py-3 bg-white w-fit">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8"
-                                stroke="currentColor" class="size-8 text-emerald-800">
-        
+                                stroke="currentColor" class="size-6 md:size-8 text-emerald-800 shrink-0">
                                 <path stroke-linecap="round" stroke-linejoin="round"
                                     d="M6.75 3v2.25M17.25 3v2.25M3.75 8.25h16.5M4.5 6h15A1.5 1.5 0 0 1 21 7.5v12A1.5 1.5 0 0 1 19.5 21h-15A1.5 1.5 0 0 1 3 19.5v-12A1.5 1.5 0 0 1 4.5 6Z" />
-        
                             </svg>
-        
-                            <span class="font-semibold text-lg capitalize">
+                            <span class="font-semibold text-base md:text-lg capitalize">
                                 {{ tanggalHariIni }}
                             </span>
                         </div>
                     </div>
-        
-                    <!-- Form -->
+
+                    <!-- Form Fields -->
                     <div class="max-w-4xl">
-                        
-                        <div class="grid grid-cols-2 gap-6 mb-4">
 
+                        <!-- Tinggi & Berat -->
+                        <div class="grid grid-cols-2 gap-4 md:gap-6 mb-4">
                             <div>
-                                <label class="block text-xl font-medium mb-2">
-                                    Tinggi Badan
-                                </label>
-
+                                <label class="block text-lg md:text-xl font-medium mb-2">Tinggi Badan</label>
                                 <div class="flex items-center gap-3">
                                     <input type="number" v-model="form.tinggi_badan"
                                         class="border border-gray-500 rounded-lg h-12 w-full px-3 bg-white">
-
-                                    <span>cm</span>
+                                    <span class="shrink-0">cm</span>
                                 </div>
                             </div>
-
                             <div>
-                                <label class="block text-xl font-medium mb-2">
-                                    Berat Badan
-                                </label>
-
+                                <label class="block text-lg md:text-xl font-medium mb-2">Berat Badan</label>
                                 <div class="flex items-center gap-3">
                                     <input type="number" v-model="form.berat_badan"
                                         class="border border-gray-500 rounded-lg h-12 w-full px-3 bg-white">
-
-                                    <span>kg</span>
+                                    <span class="shrink-0">kg</span>
                                 </div>
                             </div>
-
                         </div>
-                                        <!-- BB -->
-                        <div class="grid grid-cols-2 gap-6 mb-6">
 
+                        <!-- Suhu & Tensi -->
+                        <div class="grid grid-cols-2 gap-4 md:gap-6 mb-6">
                             <div>
-                                <label class="block text-xl font-medium mb-2">
-                                    Suhu
-                                </label>
-
+                                <label class="block text-lg md:text-xl font-medium mb-2">Suhu</label>
                                 <div class="flex items-center gap-3">
                                     <input type="number" step="0.1" v-model="form.suhu"
                                         class="border border-gray-500 rounded-lg h-12 w-full px-3 bg-white">
-
-                                    <span>°C</span>
+                                    <span class="shrink-0">°C</span>
                                 </div>
                             </div>
-
                             <div>
-                                <label class="block text-xl font-medium mb-2">
-                                    Tensi
-                                </label>
-
+                                <label class="block text-lg md:text-xl font-medium mb-2">Tensi</label>
                                 <div class="flex items-center gap-3">
                                     <input type="text" placeholder="120/80" v-model="form.tensi"
                                         class="border border-gray-500 rounded-lg h-12 w-full px-3 bg-white">
-                                    <span>mmHg</span>
+                                    <span class="shrink-0">mmHg</span>
                                 </div>
                             </div>
+                        </div>
 
+                        <!-- Dokter -->
+                        <div
+                            class="flex flex-col md:grid md:grid-cols-[220px_1fr] items-start md:items-center mb-4 gap-2 md:gap-0">
+                            <label class="text-xl md:text-2xl font-medium">Dokter</label>
+                            <select v-model="form.id_dokter"
+                                class="border border-gray-500 rounded-lg p-4 bg-white w-full resize-none">
+                                <option v-for="dokter in dokters" :key="dokter.id_dokter" :value="dokter.id_dokter">
+                                    {{ dokter.nama }}
+                                </option>
+                            </select>
                         </div>
-                        
-                        <div class="grid grid-cols-[220px_1fr] items-center mb-4">
-                            
-                            <label class="text-2xl font-medium">
-                                Dokter
-                            </label>
-        
-                            <select v-model="form.id_dokter" class="border border-gray-500 rounded-lg p-4 bg-white w-full resize-none">
-                            <option v-for="dokter in dokters" :key="dokter.id_dokter" :value="dokter.id_dokter">
-                                {{ dokter.nama }}
-                            </option>
-                        </select>
-                        </div>
+
                         <!-- Diagnosa -->
-
-                        <div class="grid grid-cols-[220px_1fr] items-center mb-4">
-                            
-                            <label class="text-2xl font-medium">
-                                Diagnosa
-                            </label>
-        
+                        <div class="flex flex-col md:grid md:grid-cols-[220px_1fr] items-start mb-4 gap-2 md:gap-0">
+                            <label class="text-xl md:text-2xl font-medium">Diagnosa</label>
                             <textarea rows="4" v-model="form.diagnosa"
                                 class="border border-gray-500 rounded-lg p-4 bg-white w-full resize-none"></textarea>
                         </div>
@@ -194,8 +166,7 @@ import { computed } from 'vue'
                             {{ $page.props.errors.diagnosa }}
                         </p>
                     </div>
-                
-        
+
                     <!-- Button -->
                     <div class="flex justify-end mt-8">
                         <button type="submit"

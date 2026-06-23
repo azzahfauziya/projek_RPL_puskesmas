@@ -1,6 +1,7 @@
 <template>
-    <aside :class="open ? 'w-64' : 'w-0'"
-        class="h-screen overflow-hidden bg-white border-r transition-all duration-300 ease-in-out">
+    <aside
+        :style="open ? `width: ${sidebarWidth}px` : 'width: 0'"
+        class="shrink-0 h-screen overflow-hidden bg-white border-r transition-[width] duration-300 ease-in-out relative z-40 select-none">
 
         <nav class="mt-4 px-3 pt-20">
             <a v-for="item in menus" :key="item.name" :href="item.href"
@@ -9,12 +10,18 @@
                 <span>{{ item.name }}</span>
             </a>
         </nav>
+
+        <!-- Handle drag -->
+        <div
+            @mousedown="startResize"
+            class="absolute top-0 right-0 h-full w-1.5 cursor-col-resize hover:bg-emerald-200 transition-colors">
+        </div>
     </aside>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { usePage } from '@inertiajs/vue3'  // ← ambil role dari auth
+import { ref, computed } from 'vue'
+import { usePage } from '@inertiajs/vue3'
 import {
     HomeIcon,
     UserGroupIcon,
@@ -29,9 +36,29 @@ defineProps({
     open: Boolean
 })
 
-
 const page = usePage()
 const role = computed(() => page.props.auth?.user?.role ?? '')
+
+const sidebarWidth = ref(256) // default w-64 = 256px
+
+function startResize(e) {
+    const startX = e.clientX
+    const startWidth = sidebarWidth.value
+
+    function onMouseMove(e) {
+        const delta = e.clientX - startX
+        const newWidth = Math.min(480, Math.max(160, startWidth + delta))
+        sidebarWidth.value = newWidth
+    }
+
+    function onMouseUp() {
+        window.removeEventListener('mousemove', onMouseMove)
+        window.removeEventListener('mouseup', onMouseUp)
+    }
+
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup', onMouseUp)
+}
 
 const menuPerRole = {
     administrasi: [

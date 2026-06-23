@@ -18,6 +18,7 @@ use App\Http\Controllers\BillingController;
 use App\Http\Controllers\EditObatController;
 use App\Http\Controllers\HistoriPasienController;
 use App\Http\Controllers\DiagnosaController;
+use App\Http\Controllers\ProfilController;
 
 Route::get('/', fn() => redirect()->route('login'));
 
@@ -28,6 +29,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profil', [ProfilController::class, 'index'])->name('profil');
+    Route::put('/profil/password', [ProfilController::class, 'updatePassword'])->name('profil.password');
 
     Route::get('/staff', [StaffController::class, 'index'])->name('staff');
 
@@ -39,12 +42,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/histori-pasien/{no_rm}', [HistoriPasienController::class, 'show'])->name('histori-pasien');
         Route::post('/pasien-darurat', [PendaftaranController::class, 'storeDarurat'])->name('pasien-darurat.store');
         Route::get('/kwitansi/{no_registrasi}', [KwitansiController::class, 'show'])->name('kwitansi');
-        Route::get('/kwitansi/{no_registrasi}',[KwitansiController::class, 'show'])->name('kwitansi');
+        Route::get('/kwitansi/{no_registrasi}', [KwitansiController::class, 'show'])->name('kwitansi');
     });
 
     // Administrasi
     Route::middleware(['role:administrasi'])->group(function () {
         Route::get('/dashboard/administrasi', [DashboardController::class, 'administrasi'])->name('dashboard.administrasi');
+        // Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
+        Route::get('/staff/tambah', [StaffController::class, 'create'])->name('staff.create');
+        Route::post('/staff/tambah', [StaffController::class, 'store'])->name('staff.store');
         Route::get('/kunjungan', [AntrianController::class, 'daftarKunjungan'])->name('kunjungan');
         //Route::get('/pendaftaran', [PendaftaranController::class, 'form'])->name('pendaftaran.form');
         Route::get('/pendaftaran/cari', [PendaftaranController::class, 'cariPasien'])->name('pendaftaran.cari');
@@ -54,8 +60,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/tagihan/{no_registrasi}', [TagihanController::class, 'show'])->name('tagihan');
         // Route::get('/kwitansi/{no_registrasi}', [KwitansiController::class, 'show'])->name('kwitansi');
         Route::post('/billing', [BillingController::class, 'store'])->name('billing.store');
-        Route::get('/pendaftaran/edit/{no_registrasi}',[PendaftaranController::class, 'editDarurat'])->name('pendaftaran.edit');
-        Route::put('/pendaftaran/darurat/update',[PendaftaranController::class, 'updateDarurat'])->name('pendaftaran.updateDarurat');
+        Route::get('/pendaftaran/edit/{no_registrasi}', [PendaftaranController::class, 'editDarurat'])->name('pendaftaran.edit');
+        Route::put('/pendaftaran/darurat/update', [PendaftaranController::class, 'updateDarurat'])->name('pendaftaran.updateDarurat');
     });
 
     Route::middleware(['role:dokter,perawat'])->group(function () {

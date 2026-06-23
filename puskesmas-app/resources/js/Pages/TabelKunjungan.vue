@@ -73,84 +73,84 @@ const paginated = computed(() => {
         <SideBar :open="sidebarOpen" />
         <div class="flex flex-1 flex-col overflow-hidden">
             <NavBar :open="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-            <main class="flex-1 overflow-y-auto p-8">
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8">
 
-            <!-- Header -->
-            <div class="grid grid-cols-4 gap-4 mb-6">
-                <div class="col-span-3">
-                    <h1 class="text-2xl font-extrabold text-[#144B29]">Data Kunjungan</h1>
-                </div>
-                <div class="flex items-center gap-2 justify-end">
-                    <!-- Search -->
-                    <input v-model="search" type="text"
-                        class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                        placeholder="Cari No. RM / Nama" />
-                    
-                    <!-- Filter tanggal -->
-                    <div class="flex items-center gap-1 shrink-0 border-1">
-                        <span v-if="filterTanggal" class="text-xs text-slate-600 whitespace-nowrap">{{ filterTanggal }}</span>
-                        <button v-if="filterTanggal" @click="filterTanggal = ''" class="text-slate-400 hover:text-red-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 pointer-events-none">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                        <button @click="openDatePicker" class="text-slate-500 hover:text-emerald-700 p-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 pointer-events-none">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                            </svg>
-                        </button>
-                        <input
-                            ref="dateInput"
-                            v-model="filterTanggal"
-                            type="date"
-                            class="w-1 h-1 opacity-0 absolute"
-                        />
+                <!-- Header -->
+                <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
+                    <div class="flex-1">
+                        <h1 class="text-xl sm:text-2xl font-extrabold text-[#144B29]">Data Kunjungan</h1>
                     </div>
-                </div>
-            </div>
+                    <div class="flex items-center gap-2">
+                        <!-- Search -->
+                        <input v-model="search" type="text"
+                            class="w-full sm:w-56 px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                            placeholder="Cari No. RM / Nama" />
 
-                    <!-- Tabel -->
-                    <div class="bg-white rounded-lg shadow overflow-hidden">
-                        <div class="p-4">
-                            <table class="table-auto w-full text-sm">
-                                <thead>
-                                    <tr class="bg-gray-200">
-                                        <th class="py-3 px-4 text-left rounded-l-lg">No. RM</th>
-                                        <th class="py-3 px-4 text-left">No Registrasi</th>
-                                        <th class="py-3 px-4 text-left">Nama</th>
-                                        <th class="py-3 px-4 text-left">Tanggal Kunjungan</th>
-                                        <th class="py-3 px-4 text-center rounded-r-lg">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-if="paginated.length === 0">
-                                        <td colspan="7" class="text-center text-slate-400 py-8">
-                                            Belum ada data pasien
-                                        </td>
-                                    </tr>
-                                    <tr v-for="item in paginated" :key="item.no_registrasi"
-                                        class="border-b hover:bg-slate-50">
-                                        <td class="py-3 px-4">{{ item.no_rm }}</td>
-                                        <td class="py-3 px-4">{{ item.no_registrasi }}</td><!-- ini harusnya no regis dari tabel pendaftaran -->
-                                        <td class="py-3 px-4 font-medium">{{ item.pasien?.nama }}</td>
-                                        <td class="py-3 px-4 text-slate-600">{{ item.tanggal_kunjungan }}</td>
-                                        <td class="py-3 px-4 text-center">
-                                            <button @click="router.visit(route('tagihan', item.no_registrasi))"
-                                                :class="item.status_pembayaran === 'lunas' 
-                                                    ? 'bg-emerald-700 hover:bg-emerald-800' 
-                                                    : 'bg-red-600 hover:bg-red-700'"
-                                                class="text-white font-semibold px-4 py-1 rounded-lg shadow-md text-xs">
-                                                Tagihan
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <!-- Filter tanggal -->
+                        <div class="flex items-center gap-1 shrink-0 border-1">
+                            <span v-if="filterTanggal" class="text-xs text-slate-600 whitespace-nowrap">{{ filterTanggal }}</span>
+                            <button v-if="filterTanggal" @click="filterTanggal = ''" class="text-slate-400 hover:text-red-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4 pointer-events-none">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                            <button @click="openDatePicker" class="text-slate-500 hover:text-emerald-700 p-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 pointer-events-none">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                                </svg>
+                            </button>
+                            <input
+                                ref="dateInput"
+                                v-model="filterTanggal"
+                                type="date"
+                                class="w-1 h-1 opacity-0 absolute"
+                            />
                         </div>
                     </div>
+                </div>
 
-                    <!-- Pagination -->
-                <div class="flex justify-end mt-4 gap-2">
+                <!-- Tabel -->
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <div class="p-4 overflow-x-auto">
+                        <table class="table-auto w-full text-sm min-w-[520px]">
+                            <thead>
+                                <tr class="bg-gray-200">
+                                    <th class="py-3 px-4 text-left rounded-l-lg">No. RM</th>
+                                    <th class="py-3 px-4 text-left">No Registrasi</th>
+                                    <th class="py-3 px-4 text-left">Nama</th>
+                                    <th class="py-3 px-4 text-left">Tanggal Kunjungan</th>
+                                    <th class="py-3 px-4 text-center rounded-r-lg">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-if="paginated.length === 0">
+                                    <td colspan="7" class="text-center text-slate-400 py-8">
+                                        Belum ada data pasien
+                                    </td>
+                                </tr>
+                                <tr v-for="item in paginated" :key="item.no_registrasi"
+                                    class="border-b hover:bg-slate-50">
+                                    <td class="py-3 px-4">{{ item.no_rm }}</td>
+                                    <td class="py-3 px-4">{{ item.no_registrasi }}</td>
+                                    <td class="py-3 px-4 font-medium">{{ item.pasien?.nama }}</td>
+                                    <td class="py-3 px-4 text-slate-600">{{ item.tanggal_kunjungan }}</td>
+                                    <td class="py-3 px-4 text-center">
+                                        <button @click="router.visit(route('tagihan', item.no_registrasi))"
+                                            :class="item.status_pembayaran === 'lunas'
+                                                ? 'bg-emerald-700 hover:bg-emerald-800'
+                                                : 'bg-red-600 hover:bg-red-700'"
+                                            class="text-white font-semibold px-4 py-1 rounded-lg shadow-md text-xs">
+                                            Tagihan
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex flex-wrap justify-end mt-4 gap-2">
                     <button @click="currentPage = 1" :disabled="currentPage === 1"
                         class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800 disabled:opacity-40">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
@@ -164,10 +164,10 @@ const paginated = computed(() => {
                         </svg>
                     </button>
 
-                    <button v-for="page in totalPages" :key="page" @click="currentPage = page"
-                        :class="currentPage === page ? 'bg-emerald-800 text-white' : 'text-emerald-800'"
+                    <button v-for="p in totalPages" :key="p" @click="currentPage = p"
+                        :class="currentPage === p ? 'bg-emerald-800 text-white' : 'text-emerald-800'"
                         class="w-10 h-10 border border-emerald-800 rounded-lg">
-                        {{ page }}
+                        {{ p }}
                     </button>
 
                     <button @click="currentPage++" :disabled="currentPage === totalPages"

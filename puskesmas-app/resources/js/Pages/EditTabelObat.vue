@@ -3,67 +3,58 @@
 import { ref, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 
-    const search = ref('')
+const search = ref('')
 
-    const props = defineProps({
-        obat: Array
+const props = defineProps({
+    obat: Array
+})
+
+const obatFilter = computed(() => {
+    if (!search.value) return props.obat
+
+    return props.obat.filter(item =>
+        item.id_obat.toLowerCase().includes(search.value.toLowerCase()) ||
+        item.nama_obat.toLowerCase().includes(search.value.toLowerCase())
+    )
+})
+
+const simpanSemua = () => {
+    console.log(props.obat)
+
+    router.put(route('obat.update.semua'), {
+        obat: props.obat
     })
+}
 
-    const obatFilter = computed(() => {
-        if (!search.value) return props.obat
-
-        return props.obat.filter(item =>
-            item.id_obat.toLowerCase().includes(search.value.toLowerCase()) ||
-            item.nama_obat.toLowerCase().includes(search.value.toLowerCase())
-        )
+const tambahObat = () => {
+    props.obat.push({
+        id_obat: '',
+        nama_obat: '',
+        stok: 0,
+        harga_satuan: 0,
+        bentuk: '',
+        satuan: '',
+        is_new: true
     })
-
-    const simpanSemua = () => {
-        console.log(props.obat)
-
-        router.put(route('obat.update.semua'), {
-            obat: props.obat
-        })
-    }
-
-    const tambahObat = () => {
-        props.obat.push({
-            id_obat: '',
-            nama_obat: '',
-            stok: 0,
-            harga_satuan: 0,
-            bentuk: '',
-            satuan: '',
-            is_new: true
-        })
-    }
-</script> 
+}
+</script>
 
 <template>
     <div class="p-8 bg-gray-100 min-h-screen dark:bg-gray-900 text-gray-800 dark:text-gray-100">
-        <!-- Header dengan grid 2 kolom: Judul di kiri, Search di kanan -->
-        <div class="grid grid-cols-4 gap-4 mb-6">
-            <!-- Kolom Kiri: Judul -->
-            <div class="col-span-3">
-                <h1 class="text-2xl font-extrabold text-[#144B29] dark:text-blue-400">
-                    Tabel Obat
-                </h1>
-            </div>
-
-            <!-- Kolom Kanan: Search -->
-            <div>
-                <div>
-                    <input v-model="search" type="text"
-                        class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                        placeholder="Cari obat berdasarkan ID / Nama" />
-                </div>
-            </div>
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
+            <h1 class="text-2xl font-extrabold text-[#144B29] dark:text-blue-400 sm:flex-1">
+                Daftar Obat
+            </h1>
+            <input v-model="search" type="text"
+                class="w-full sm:w-64 px-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                placeholder="Cari obat berdasarkan ID / Nama" />
         </div>
 
         <!-- Tabel -->
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
-            <div class="p-4 text-center"> <!-- Ganti p-40 ke p-4 biar ga kegedean -->
-                <table class="table-auto w-full">
+            <div class="p-4 text-center overflow-x-auto">
+                <table class="table-auto w-full min-w-[500px]">
                     <thead>
                         <tr class="bg-gray-200 dark:bg-gray-700">
                             <th class="py-3 px-4 rounded-l-lg">ID</th>
@@ -79,36 +70,36 @@ import { router } from '@inertiajs/vue3'
                             <!-- ID -->
                             <td class="py-3 px-4">
                                 <input type="text" :value="item.id_obat" disabled
-                                    class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg bg-gray-100" />
+                                    class="min-w-0 px-4 py-2.5 text-sm border border-gray-300 rounded-lg bg-gray-100" />
                             </td>
 
                             <!-- Nama Obat -->
                             <td class="py-3 px-4">
                                 <input v-model="item.nama_obat" type="text"
-                                    class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg" />
+                                    class="min-w-0 px-4 py-2.5 text-sm border border-gray-300 rounded-lg" />
                             </td>
 
                             <!-- Stok -->
                             <td class="py-3 px-4">
                                 <input v-model="item.stok" type="number" min="0"
-                                    class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg" />
+                                    class="min-w-0 px-4 py-2.5 text-sm border border-gray-300 rounded-lg" />
                             </td>
 
                             <!-- Harga -->
                             <td class="py-3 px-4">
                                 <input v-model="item.harga_satuan" type="number" min="0"
-                                    class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg" />
+                                    class="min-w-0 px-4 py-2.5 text-sm border border-gray-300 rounded-lg" />
                             </td>
 
                             <!-- Bentuk -->
                             <td class="py-3 px-4">
                                 <input v-model="item.bentuk" type="text"
-                                    class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg" />
+                                    class="min-w-0 px-4 py-2.5 text-sm border border-gray-300 rounded-lg" />
                             </td>
 
                             <td class="py-3 px-4">
                                 <input v-model="item.satuan" type="text"
-                                    class="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-lg" />
+                                    class="min-w-0 px-4 py-2.5 text-sm border border-gray-300 rounded-lg" />
                             </td>
                         </tr>
                     </tbody>
@@ -130,6 +121,6 @@ import { router } from '@inertiajs/vue3'
                 class="flex items-center gap-2 bg-green-900 hover:bg-green-800 text-white font-semibold px-8 py-3 rounded-xl transition duration-200 shadow-md">
                 Simpan
             </button>
-        </div>   
+        </div>
     </div>
 </template>
