@@ -146,7 +146,7 @@ function submit() {
 
                     <!-- Actions -->
                     <div class="flex justify-end gap-3 mt-6">
-                        <Link :href="route('staff.index')"
+                        <Link :href="route('staff')"
                             class="px-4 py-2 text-sm border border-slate-300 rounded-lg text-slate-600 hover:bg-slate-50">
                             Batal
                         </Link>

@@ -133,7 +133,7 @@ function submit() {
 
 <template>
     <div class="flex h-screen overflow-hidden bg-slate-100 min-w-0">
-        <SideBar :open="sidebarOpen" />
+        <SideBar :open="sidebarOpen" @close="sidebarOpen = false" />
         <div class="flex flex-1 flex-col overflow-hidden min-w-0">
             <NavBar :open="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
             <main class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 min-w-0">

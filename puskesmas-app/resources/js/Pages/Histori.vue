@@ -36,7 +36,7 @@ const formatTanggal = (tgl) => {
 
 <template>
     <div class="flex h-screen overflow-hidden bg-slate-100">
-        <SideBar :open="sidebarOpen" />
+        <SideBar :open="sidebarOpen" @close="sidebarOpen = false" />
         <div class="flex flex-1 flex-col overflow-hidden">
             <NavBar :open="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
             <main class="flex-1 overflow-y-auto p-4 md:p-8">
@@ -51,15 +51,17 @@ const formatTanggal = (tgl) => {
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                         </svg>
                     </button>
-                    <button @click="openDatePicker" class="text-slate-500 hover:text-emerald-700 p-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="size-5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                        </svg>
-                    </button>
-                    <input ref="dateInput" v-model="filterTanggal" @change="currentPage = 1" type="date"
-                        class="w-1 h-1 opacity-0 absolute" />
+                    <div class="relative">
+                        <button @click="openDatePicker" class="text-slate-500 hover:text-emerald-700 p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="size-5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                            </svg>
+                        </button>
+                        <input ref="dateInput" v-model="filterTanggal" @change="currentPage = 1" type="date"
+                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" />
+                    </div>
                 </div>
 
                 <div v-if="!current" class="text-center text-slate-400 py-16">Tidak ada data kunjungan</div>

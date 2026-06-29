@@ -27,7 +27,7 @@ const props = defineProps({
     <div class="flex h-screen overflow-hidden bg-slate-100">
 
         <!-- Sidebar -->
-        <SideBar :open="sidebarOpen" />
+        <SideBar :open="sidebarOpen" @close="sidebarOpen = false" />
 
         <!-- Konten kanan -->
         <div class="flex flex-1 flex-col overflow-hidden">

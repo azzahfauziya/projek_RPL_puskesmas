@@ -125,6 +125,6 @@ class StaffController extends Controller
             };
         });
 
-        return redirect()->route('staff.index')->with('success', 'Staff berhasil ditambahkan.');
+        return redirect()->route('staff')->with('success', 'Staff berhasil ditambahkan.');
     }
 }

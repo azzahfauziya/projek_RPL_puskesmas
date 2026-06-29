@@ -1,18 +1,9 @@
 <template>
     <Disclosure as="nav"
-        class="relative bg-white after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10"
-        v-slot="{ disclosureOpen }">
+    class="relative z-50 bg-white after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10"
+    v-slot="{ disclosureOpen }">
         <div class="mx-auto max-w-screen-2xl px-3 sm:px-6">
             <div class="relative flex h-16 sm:h-20 items-center justify-between">
-                <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                    <DisclosureButton
-                        class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:-outline-offset-1 focus:outline-indigo-500">
-                        <span class="absolute -inset-0.5"></span>
-                        <span class="sr-only">Open main menu</span>
-                        <Bars3Icon v-if="!disclosureOpen" class="block size-6" aria-hidden="true" />
-                        <XMarkIcon v-else class="block size-6" aria-hidden="true" />
-                    </DisclosureButton>
-                </div>
 
                 <!-- Tombol sidebar -->
                 <button @click="$emit('toggle-sidebar')"

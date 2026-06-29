@@ -60,14 +60,14 @@
 
 <template>
     <div class="flex h-screen overflow-hidden bg-slate-100">
-        <SideBar :open="sidebarOpen" />
+        <SideBar :open="sidebarOpen" @close="sidebarOpen = false" />
         <div class="flex flex-1 flex-col overflow-hidden">
             <NavBar :open="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
             <main class="flex-1 overflow-y-auto p-4 md:p-8">
 
                 <!-- Header -->
                 <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
-                    <h1 class="text-2xl font-extrabold text-[#144B29] dark:text-blue-400 sm:flex-1">
+                    <h1 class="text-2xl font-extrabold text-[#144B29] sm:flex-1">
                         Tabel Obat
                     </h1>
                     <input v-model="search" type="text"
@@ -76,11 +76,11 @@
                 </div>
 
                 <!-- Tabel -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="bg-white rounded-lg shadow overflow-hidden">
                     <div class="p-4 text-center overflow-x-auto">
                         <table class="table-auto w-full min-w-[500px]">
                             <thead>
-                                <tr class="bg-gray-200 dark:bg-gray-700">
+                                <tr class="bg-gray-200">
                                     <th class="py-3 px-4 rounded-l-lg">ID</th>
                                     <th class="py-3 px-4">Nama</th>
                                     <th class="py-3 px-4">Stok</th>
@@ -90,7 +90,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="item in obatTampil" :key="item.id_obat"
-                                    class="border-b dark:border-gray-700"
+                                    class="border-b"
                                     :class="{ 'bg-red-100 text-red-700 font-semibold': item.stok == 0 }">
                                     <td class="py-3 px-4">{{ item.id_obat }}</td>
                                     <td class="py-3 px-4">{{ item.nama_obat }}</td>
@@ -106,7 +106,7 @@
                 </div>
 
                 <!-- Pagination -->
-                <div class="flex justify-end mt-4 gap-2">
+                <div class="flex flex-wrap justify-end mt-4 gap-2">
                     <button @click="firstPage"
                         class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

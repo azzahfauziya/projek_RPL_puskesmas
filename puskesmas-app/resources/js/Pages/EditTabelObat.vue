@@ -40,10 +40,10 @@ const tambahObat = () => {
 </script>
 
 <template>
-    <div class="p-8 bg-gray-100 min-h-screen dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+    <div class="p-8 bg-gray-100 min-h-screen text-gray-800">
         <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
-            <h1 class="text-2xl font-extrabold text-[#144B29] dark:text-blue-400 sm:flex-1">
+            <h1 class="text-2xl font-extrabold text-[#144B29] sm:flex-1">
                 Daftar Obat
             </h1>
             <input v-model="search" type="text"
@@ -52,11 +52,11 @@ const tambahObat = () => {
         </div>
 
         <!-- Tabel -->
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+        <div class="bg-white rounded-lg shadow overflow-hidden">
             <div class="p-4 text-center overflow-x-auto">
                 <table class="table-auto w-full min-w-[500px]">
                     <thead>
-                        <tr class="bg-gray-200 dark:bg-gray-700">
+                        <tr class="bg-gray-200">
                             <th class="py-3 px-4 rounded-l-lg">ID</th>
                             <th class="py-3 px-4 ">Nama</th>
                             <th class="py-3 px-4 ">Stok</th>
@@ -66,7 +66,7 @@ const tambahObat = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in obatFilter" :key="item.id_obat" class="border-b dark:border-gray-700">
+                        <tr v-for="item in obatFilter" :key="item.id_obat" class="border-b">
                             <!-- ID -->
                             <td class="py-3 px-4">
                                 <input type="text" :value="item.id_obat" disabled

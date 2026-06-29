@@ -1,61 +1,64 @@
 <template>
+    <div v-if="!isDesktop && open" @click="$emit('close')"
+        class="fixed inset-0 z-30 bg-black/40"></div>
+
     <aside
-        :style="open ? `width: ${sidebarWidth}px` : 'width: 0'"
-        class="shrink-0 h-screen overflow-hidden bg-white border-r transition-[width] duration-300 ease-in-out relative z-40 select-none">
+        :style="isDesktop ? `width: ${open ? sidebarWidth : 0}px` : `width: ${sidebarWidth}px`"
+        :class="[
+            'fixed md:relative top-0 left-0 h-screen bg-white border-r z-40 select-none overflow-hidden transition-[width,transform] duration-300',
+            !isDesktop && !open ? '-translate-x-full' : 'translate-x-0'
+        ]">
 
         <nav class="mt-4 px-3 pt-20">
             <a v-for="item in menus" :key="item.name" :href="item.href"
+                @click="onMenuClick"
                 class="mb-1 flex items-center gap-3 rounded-lg px-4 py-3 text-emerald-800 hover:bg-emerald-50">
                 <component :is="item.icon" class="h-5 w-5 shrink-0" />
                 <span>{{ item.name }}</span>
             </a>
         </nav>
 
-        <!-- Handle drag -->
-        <div
-            @mousedown="startResize"
-            class="absolute top-0 right-0 h-full w-1.5 cursor-col-resize hover:bg-emerald-200 transition-colors">
+        <div v-if="isDesktop" @mousedown="startResize"
+            class="absolute top-0 right-0 h-full w-1.5 cursor-col-resize hover:bg-emerald-200">
         </div>
     </aside>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import {
-    HomeIcon,
-    UserGroupIcon,
-    ClipboardDocumentListIcon,
-    BeakerIcon,
-    DocumentTextIcon,
-    QueueListIcon,
+    HomeIcon, UserGroupIcon, ClipboardDocumentListIcon,
+    BeakerIcon, DocumentTextIcon, QueueListIcon,
 } from '@heroicons/vue/24/outline'
-import { CreditCardIcon } from 'lucide-vue-next'
 
-defineProps({
-    open: Boolean
-})
+defineProps({ open: Boolean })
+const emit = defineEmits(['close'])
 
 const page = usePage()
 const role = computed(() => page.props.auth?.user?.role ?? '')
+const sidebarWidth = ref(256)
 
-const sidebarWidth = ref(256) // default w-64 = 256px
+const isDesktop = ref(window.innerWidth >= 768)
+function handleResize() { isDesktop.value = window.innerWidth >= 768 }
+onMounted(() => window.addEventListener('resize', handleResize))
+onUnmounted(() => window.removeEventListener('resize', handleResize))
+
+function onMenuClick() {
+    if (!isDesktop.value) emit('close')
+}
 
 function startResize(e) {
     const startX = e.clientX
     const startWidth = sidebarWidth.value
-
     function onMouseMove(e) {
         const delta = e.clientX - startX
-        const newWidth = Math.min(480, Math.max(160, startWidth + delta))
-        sidebarWidth.value = newWidth
+        sidebarWidth.value = Math.min(480, Math.max(160, startWidth + delta))
     }
-
     function onMouseUp() {
         window.removeEventListener('mousemove', onMouseMove)
         window.removeEventListener('mouseup', onMouseUp)
     }
-
     window.addEventListener('mousemove', onMouseMove)
     window.addEventListener('mouseup', onMouseUp)
 }

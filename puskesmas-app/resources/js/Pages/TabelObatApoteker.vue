@@ -61,7 +61,7 @@ watch(search, () => {
 
 <template>
     <div class="flex h-screen overflow-hidden bg-slate-100">
-        <SideBar :open="sidebarOpen" />
+        <SideBar :open="sidebarOpen" @close="sidebarOpen = false" />
         <div class="flex flex-1 flex-col overflow-hidden">
             <NavBar :open="sidebarOpen" @toggle-sidebar="sidebarOpen = !sidebarOpen" />
             <main class="flex-1 overflow-y-auto p-4 md:p-8">
@@ -79,11 +79,11 @@ watch(search, () => {
                 </div>
 
                 <!-- Tabel -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+                <div class="bg-white rounded-lg shadow overflow-hidden">
                     <div class="p-4 text-center overflow-x-auto">
-                        <table class="table-auto w-full w-full min-w-[500px]">
+                        <table class="table-auto w-full min-w-[500px]">
                             <thead>
-                                <tr class="bg-gray-200 dark:bg-gray-700">
+                                <tr class="bg-gray-200">
                                     <th class="py-3 px-4 rounded-l-lg">ID</th>
                                     <th class="py-3 px-4 ">Nama</th>
                                     <th class="py-3 px-4 ">Stok</th>
@@ -92,7 +92,7 @@ watch(search, () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="item in obatTampil" :key="item.id_obat" class="border-b dark:border-gray-700"
+                                <tr v-for="item in obatTampil" :key="item.id_obat" class="border-b"
                                     :class="{
                                         'bg-red-100 text-red-700 font-semibold': item.stok == 0
                                     }">
@@ -108,14 +108,14 @@ watch(search, () => {
                         </table>
                     </div>
                 </div>
-                <div class="grid grid-cols-4 gap-4 mb-6">
-                    <div class="col-span-1">
+                <div class="flex flex-col md:grid md:grid-cols-4 gap-4 mb-6">
+                    <div class="md:col-span-1">
                         <!-- tombol edit -->
                         <div class="flex flex-col sm:flex-row sm:items-center gap-3 mt-4">
                             <Link :href="route('obat.edit')"
-                                class="pl-10 flex items-center justify-center text-emerald-800 font-extrabold">
+                                class="md:pl-10 flex items-center gap-1 sm:gap-0 justify-center text-emerald-800 font-extrabold">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="size-8">
+                                    stroke-width="1.5" stroke="currentColor" class="size-8 shrink-0">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z" />
                                 </svg>
@@ -124,10 +124,10 @@ watch(search, () => {
                             </Link>
                         </div>
                     </div>
-                    <div class="col-span-3">
+                    <div class="md:col-span-3">
                         <!-- tombol pindah halaman -->
                         <!-- Pagination -->
-                        <div class="flex justify-end mt-4 gap-2">
+                        <div class="flex flex-wrap justify-end mt-4 gap-2">
                             <button @click="firstPage"
                                 class="w-10 h-10 border border-emerald-800 rounded-xl flex items-center justify-center text-emerald-800">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
