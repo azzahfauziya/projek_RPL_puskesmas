@@ -17,7 +17,7 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Login" />
     <div class="min-h-screen flex items-center justify-center bg-slate-100">
         <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
 
