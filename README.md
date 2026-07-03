@@ -30,7 +30,7 @@ Aplikasi ini memiliki 4 role dengan hak akses dan dashboard masing-masing:
 
 ## Akun Demo
 
-| Role | Email | Password |
+| Role | Username | Password |
 |---|---|---|
 | Administrasi | admin01 | admin111 |
 | Dokter | dokter01 | dokter123 |
